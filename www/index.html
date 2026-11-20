@@ -1,0 +1,2353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#F4F6F4">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg">
+<link rel="apple-touch-icon" href="icon-192.png">
+<title>Waveloom — Malayalam Radio</title>
+<script src="https://cdn.jsdelivr.net/npm/hls.js@1.5.15/dist/hls.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Noto+Sans+Malayalam:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --radius: 14px;
+  --bg: #F4F6F4;
+  --text: #132019;
+  --accent: #1E6B4B;
+  --console: #10241B;
+  --console-accent: #6EE7B7;
+  --green: #15803D;
+  --red: #DC2626;
+  --muted: color-mix(in srgb, var(--text) 58%, var(--bg));
+  --border: color-mix(in srgb, var(--text) 12%, var(--bg));
+  --card: color-mix(in srgb, var(--text) 4%, var(--bg));
+  --card-solid: color-mix(in srgb, var(--bg) 94%, #fff);
+  --hover: color-mix(in srgb, var(--text) 8%, var(--bg));
+  --hl: color-mix(in srgb, var(--accent) 11%, var(--bg));
+  --shadow: 0 4px 20px -2px rgba(0,0,0,.06);
+}
+:root.dark {
+  --green: #4ADE80;
+  --red: #F87171;
+  --card-solid: color-mix(in srgb, var(--bg) 92%, #fff);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html { color-scheme: light; }
+html.dark { color-scheme: dark; }
+body {
+  font-family: 'Plus Jakarta Sans', 'Noto Sans Malayalam', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.5;
+  min-height: 100dvh;
+  -webkit-font-smoothing: antialiased;
+  transition: background .25s, color .25s;
+}
+button, input, select { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 8px; }
+[hidden] { display: none !important; }
+
+/* App Shell Layout */
+.app-shell {
+  display: grid;
+  grid-template-columns: 250px 1fr 340px;
+  min-height: 100dvh;
+  max-width: 1480px;
+  margin: 0 auto;
+}
+
+/* Left Sidebar */
+.sidebar {
+  border-right: 1px solid var(--border);
+  padding: 24px 18px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  height: 100dvh;
+  background: var(--card);
+}
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 8px 24px;
+  border-bottom: 1px solid var(--border);
+}
+.brand-badge {
+  width: 38px;
+  height: 38px;
+  border-radius: 11px;
+  background: var(--accent);
+  color: #fff;
+  display: grid;
+  place-items: center;
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
+  font-size: 1.2rem;
+  box-shadow: 0 4px 12px color-mix(in srgb, var(--accent) 30%, transparent);
+}
+.brand-name { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 1.15rem; letter-spacing: -.02em; }
+.brand-sub { font-size: .75rem; color: var(--muted); }
+.nav-menu { display: flex; flex-direction: column; gap: 6px; margin-top: 20px; }
+.nav-tab {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 11px 14px;
+  border: 0;
+  background: transparent;
+  border-radius: 11px;
+  font-size: .92rem;
+  font-weight: 600;
+  color: var(--muted);
+  cursor: pointer;
+  transition: all .15s;
+}
+.nav-tab:hover { background: var(--hover); color: var(--text); }
+.nav-tab.active { background: var(--accent); color: #fff; }
+.nav-tab .nav-left { display: flex; align-items: center; gap: 10px; }
+.nav-tab small { font-size: .72rem; padding: 2px 7px; border-radius: 999px; background: rgba(255,255,255,.18); }
+.nav-tab:not(.active) small { background: var(--hover); color: var(--text); }
+
+.sidebar-footer { padding-top: 16px; border-top: 1px solid var(--border); display: flex; flex-direction: column; gap: 10px; }
+.telemetry-box { background: var(--bg); border: 1px solid var(--border); border-radius: 11px; padding: 12px; font-size: .76rem; }
+.telemetry-row { display: flex; justify-content: space-between; padding: 3px 0; color: var(--muted); }
+.telemetry-row strong { color: var(--text); font-weight: 600; }
+.lang-toggle {
+  width: 100%;
+  padding: 9px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  font-size: .84rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.lang-toggle:hover { background: var(--hover); }
+
+/* Center Content Feed */
+.center-pane { padding: 24px 28px 130px; min-width: 0; }
+.top-search-bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+.mobile-brand { display: none; align-items: center; gap: 10px; }
+.search-wrap { position: relative; flex: 1; min-width: 180px; max-width: 400px; }
+.search-wrap input {
+  width: 100%;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 10px 36px 10px 38px;
+  font-size: .9rem;
+}
+.search-wrap input:focus {
+  border-color: var(--accent);
+  outline: none;
+  background: var(--bg);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 16%, transparent);
+}
+.search-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--muted); pointer-events: none; }
+.search-clear { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: 0; color: var(--muted); cursor: pointer; display: none; padding: 4px; }
+.quick-actions { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+
+.banner { background: var(--red); color: #fff; padding: 10px 14px; border-radius: 10px; font-size: .84rem; margin-bottom: 18px; text-align: center; }
+
+.hero-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 18px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border);
+}
+.hero-header h1 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1.75rem;
+  font-weight: 700;
+  letter-spacing: -.025em;
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+.hero-header h1 span { font-family: 'Noto Sans Malayalam', sans-serif; font-size: 1.25rem; font-weight: 500; color: var(--accent); }
+.hero-header p { font-size: .92rem; color: var(--muted); margin-top: 2px; }
+.suggest {
+  font-size: .86rem;
+  background: var(--hl);
+  border: 1px solid color-mix(in srgb, var(--accent) 25%, transparent);
+  padding: 8px 14px;
+  border-radius: 10px;
+}
+.link { background: none; border: 0; color: var(--accent); font-weight: 700; text-decoration: underline; cursor: pointer; }
+
+/* 5-Slot Car-Stereo Presets Strip */
+.presets-bar {
+  margin-bottom: 20px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 13px;
+  padding: 10px 12px;
+}
+.presets-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+.presets-head span {
+  font-size: .72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  color: var(--muted);
+}
+.presets-head small { font-size: .72rem; color: var(--muted); }
+.presets-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+}
+.preset-slot {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 8px 10px;
+  text-align: left;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  user-select: none;
+  transition: border-color .15s, background .15s, transform .1s;
+}
+.preset-slot:hover { border-color: var(--accent); background: var(--hover); }
+.preset-slot:active { transform: scale(.97); }
+.preset-slot.active { background: var(--hl); border-color: var(--accent); }
+.preset-num {
+  width: 22px;
+  height: 22px;
+  border-radius: 6px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .74rem;
+  font-weight: 700;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+.preset-slot.active .preset-num { background: var(--accent); color: #fff; border-color: var(--accent); }
+.preset-name {
+  font-size: .8rem;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.preset-slot.empty .preset-name { color: var(--muted); font-weight: 400; }
+
+/* Recent Strip */
+#recentWrap { margin-bottom: 20px; }
+.section-label { font-size: .75rem; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin-bottom: 10px; }
+.chips { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; }
+.chip {
+  flex-shrink: 0;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 6px 12px;
+  font-size: .82rem;
+  font-weight: 500;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.chip:hover { background: var(--hover); border-color: var(--accent); }
+
+/* Filter Bar */
+.filter-bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 14px; }
+.subtabs { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 2px; }
+.subtab {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 6px 13px;
+  font-size: .82rem;
+  font-weight: 600;
+  color: var(--muted);
+  cursor: pointer;
+  white-space: nowrap;
+}
+.subtab:hover { color: var(--text); background: var(--hover); }
+.subtab.active { background: var(--text); color: var(--bg); border-color: var(--text); }
+.pill-btn {
+  font-size: .8rem;
+  font-weight: 600;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 7px 12px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.pill-btn:hover { background: var(--hover); }
+.pill-btn.primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+.pill-btn.primary:hover { opacity: .92; }
+select.pill-btn { max-width: 165px; }
+
+.caption { font-size: .8rem; color: var(--muted); margin-bottom: 14px; }
+
+/* Station Cards Grid */
+.grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+.cell {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  background: var(--card-solid);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: transform .15s, border-color .15s, box-shadow .15s;
+}
+.cell:hover { transform: translateY(-2px); border-color: color-mix(in srgb, var(--accent) 45%, var(--border)); box-shadow: var(--shadow); }
+.cell.active { background: var(--hl); border-color: var(--accent); }
+.cell.failed { opacity: .55; }
+.av {
+  position: relative;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  flex-shrink: 0;
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
+  font-size: 1.05rem;
+  background: hsl(var(--h) 42% 36%);
+}
+.av img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; background: #fff; }
+.info { min-width: 0; flex: 1; }
+.name { font-size: .94rem; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.cell.active .name { color: var(--accent); }
+.meta { font-size: .76rem; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 2px; }
+.fav {
+  background: none;
+  border: 0;
+  color: var(--muted);
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 8px;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+.fav:hover { color: var(--accent); background: var(--hover); }
+.fav.on { color: var(--red); }
+.mv { display: flex; flex-direction: column; }
+.mv button { background: none; border: 0; color: var(--muted); cursor: pointer; font-size: .65rem; padding: 1px 5px; }
+.mv button:hover { color: var(--accent); }
+.empty { grid-column: 1 / -1; padding: 48px 20px; text-align: center; border: 1px dashed var(--border); border-radius: var(--radius); color: var(--muted); }
+
+/* Settings & Themes View */
+.settings { display: none; }
+.settings.visible { display: block; }
+.settings-card { background: var(--card-solid); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; margin-bottom: 18px; }
+.mode { display: inline-flex; background: var(--card); border: 1px solid var(--border); border-radius: 11px; padding: 3px; }
+.mode button { padding: 7px 20px; background: transparent; border: 0; border-radius: 8px; cursor: pointer; font-size: .84rem; font-weight: 600; }
+.mode button.active { background: var(--accent); color: #fff; }
+.swatches { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; }
+.swatch {
+  cursor: pointer;
+  text-align: left;
+  background: var(--card);
+  border: 1.5px solid var(--border);
+  border-radius: 12px;
+  padding: 10px;
+  transition: transform .15s, border-color .15s;
+}
+.swatch:hover { transform: translateY(-2px); }
+.swatch.active { border-color: var(--accent); background: var(--hl); }
+.swatch-bar { height: 36px; border-radius: 8px; display: flex; overflow: hidden; margin-bottom: 8px; border: 1px solid rgba(0,0,0,.08); }
+.swatch-bar span { flex: 1; }
+.swatch .n { font-size: .86rem; font-weight: 700; display: block; }
+.swatch .m { font-size: .76rem; color: var(--accent); display: block; }
+.swatch .e { font-size: .72rem; color: var(--muted); display: block; }
+.row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+
+.custom-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  margin-bottom: 6px;
+  font-size: .84rem;
+}
+
+/* Right Broadcast Console */
+.console-pane {
+  border-left: 1px solid var(--border);
+  padding: 20px 18px;
+  position: sticky;
+  top: 0;
+  height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background: var(--card);
+  overflow-y: auto;
+}
+.console-card {
+  background: var(--console);
+  color: #F8FAFC;
+  border-radius: 20px;
+  padding: 18px;
+  border: 1px solid rgba(255,255,255,.1);
+  box-shadow: 0 20px 40px -15px rgba(0,0,0,.35);
+}
+.tuner-screen {
+  background: rgba(0,0,0,.35);
+  border: 1px solid rgba(255,255,255,.1);
+  border-radius: 14px;
+  padding: 12px 14px;
+  margin-bottom: 14px;
+}
+.tuner-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .68rem;
+  color: var(--console-accent);
+  margin-bottom: 10px;
+}
+.live-pill { display: inline-flex; align-items: center; gap: 6px; padding: 2px 8px; border-radius: 999px; background: rgba(255,255,255,.08); }
+.lcd-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--console-accent); }
+.tuner-screen.on .lcd-dot { animation: blink 1s infinite; }
+@keyframes blink { 50% { opacity: .25; transform: scale(.75); } }
+
+.eq { height: 46px; display: flex; gap: 3px; align-items: flex-end; }
+.eq-col { flex: 1; height: 100%; display: flex; flex-direction: column-reverse; gap: 2px; }
+.eq-seg { height: 4px; border-radius: 1px; background: rgba(255,255,255,.1); transition: background .06s; }
+.eq-seg.lit { background: var(--console-accent); box-shadow: 0 0 6px var(--console-accent); }
+
+.now-meta { margin-bottom: 14px; }
+.p-cat { font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--console-accent); }
+.p-title { font-family: 'Space Grotesk', sans-serif; font-size: 1.2rem; font-weight: 700; margin: 3px 0; line-height: 1.25; }
+.p-status { font-size: .8rem; opacity: .75; }
+
+.transport { display: flex; align-items: center; justify-content: center; gap: 14px; margin-bottom: 14px; }
+.play-btn {
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  border: 0;
+  background: var(--console-accent);
+  color: var(--console);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  transition: transform .15s;
+}
+.play-btn:hover { transform: scale(1.06); }
+.t-btn {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,.15);
+  background: rgba(255,255,255,.06);
+  color: #fff;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+}
+.t-btn:hover { background: rgba(255,255,255,.15); color: var(--console-accent); }
+
+.eq-presets {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 4px;
+  background: rgba(0,0,0,.28);
+  padding: 4px;
+  border-radius: 10px;
+  margin-bottom: 12px;
+}
+.eq-p-btn {
+  background: transparent;
+  border: 0;
+  color: rgba(255,255,255,.65);
+  font-size: .68rem;
+  font-weight: 600;
+  padding: 5px 2px;
+  border-radius: 7px;
+  cursor: pointer;
+}
+.eq-p-btn:hover { color: #fff; }
+.eq-p-btn.active { background: var(--console-accent); color: var(--console); }
+
+.vol-box {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  background: rgba(255,255,255,.06);
+  border-radius: 11px;
+  margin-bottom: 12px;
+}
+.vol-box input { flex: 1; accent-color: var(--console-accent); }
+
+.console-actions { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+.dock {
+  background: rgba(255,255,255,.06);
+  border: 1px solid rgba(255,255,255,.08);
+  color: #F8FAFC;
+  cursor: pointer;
+  padding: 8px 4px;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  font-size: .68rem;
+}
+.dock:hover { color: var(--console-accent); background: rgba(255,255,255,.12); }
+.dock.active { color: var(--console-accent); border-color: var(--console-accent); }
+.dock.recording { background: rgba(220, 38, 38, .25); border-color: #F87171; color: #FCA5A5; animation: pulseRec 1.2s infinite; }
+@keyframes pulseRec { 50% { opacity: .65; } }
+
+.console-hint { font-size: .76rem; color: var(--muted); text-align: center; padding: 10px; border: 1px dashed var(--border); border-radius: 12px; margin-top: 12px; }
+
+/* Modals */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.65);
+  backdrop-filter: blur(6px);
+  z-index: 600;
+  display: grid;
+  place-items: center;
+  padding: 16px;
+}
+.modal-box {
+  background: var(--bg);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  width: 100%;
+  max-width: 420px;
+  padding: 22px;
+  box-shadow: 0 25px 50px rgba(0,0,0,.35);
+}
+.modal-box h3 { font-family: 'Space Grotesk', sans-serif; font-size: 1.2rem; margin-bottom: 14px; }
+.field { margin-bottom: 12px; }
+.field label { display: block; font-size: .78rem; font-weight: 600; color: var(--muted); margin-bottom: 4px; }
+.field input, .field select {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--card);
+}
+
+/* Fullscreen Car / Drive Mode Overlay */
+.drive-overlay {
+  position: fixed;
+  inset: 0;
+  background: #090D0B;
+  color: #F8FAFC;
+  z-index: 700;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: max(24px, env(safe-area-inset-top)) 24px max(28px, env(safe-area-inset-bottom));
+}
+.drive-top { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+.drive-badge {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .82rem;
+  color: var(--console-accent);
+  background: rgba(255,255,255,.08);
+  padding: 6px 14px;
+  border-radius: 999px;
+}
+.drive-exit {
+  background: rgba(255,255,255,.12);
+  border: 0;
+  color: #fff;
+  padding: 10px 18px;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: .95rem;
+  cursor: pointer;
+}
+.drive-center { text-align: center; padding: 16px 0; }
+.drive-cat { font-size: .95rem; color: var(--console-accent); font-weight: 700; text-transform: uppercase; letter-spacing: .1em; }
+.drive-title { font-family: 'Space Grotesk', sans-serif; font-size: clamp(2rem, 6vw, 3.6rem); font-weight: 700; margin: 10px 0; line-height: 1.15; }
+.drive-status { font-size: 1.05rem; opacity: .7; }
+.drive-presets {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 10px;
+  max-width: 680px;
+  width: 100%;
+  margin: 0 auto 14px;
+}
+.drive-preset-btn {
+  background: rgba(255,255,255,.07);
+  border: 1px solid rgba(255,255,255,.15);
+  color: #fff;
+  border-radius: 14px;
+  padding: 10px 6px;
+  font-size: .82rem;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  user-select: none;
+}
+.drive-preset-btn.active { background: rgba(110, 231, 183, .2); border-color: var(--console-accent); color: var(--console-accent); }
+.drive-controls { display: grid; grid-template-columns: 1fr 1.3fr 1fr; gap: 14px; max-width: 680px; width: 100%; margin: 0 auto; }
+.drive-btn {
+  height: 104px;
+  border-radius: 24px;
+  border: 1px solid rgba(255,255,255,.15);
+  background: rgba(255,255,255,.08);
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+.drive-btn:active { transform: scale(.96); }
+.drive-btn.main { background: var(--console-accent); color: #090D0B; border: 0; }
+
+.toast {
+  position: fixed;
+  left: 50%;
+  top: 18px;
+  transform: translate(-50%, -80px);
+  background: var(--console);
+  color: #fff;
+  padding: 10px 18px;
+  border-radius: 999px;
+  font-size: .84rem;
+  z-index: 800;
+  box-shadow: var(--shadow);
+  transition: transform .3s;
+}
+.toast.show { transform: translate(-50%, 0); }
+
+.sk { height: 68px; cursor: default; background: linear-gradient(90deg, var(--card), var(--hover), var(--card)); background-size: 200% 100%; animation: sh 1.2s infinite; }
+@keyframes sh { to { background-position: -200% 0; } }
+
+/* Responsive Breakpoints */
+@media (max-width: 1120px) {
+  .app-shell { grid-template-columns: 220px 1fr; }
+  .console-pane {
+    position: fixed;
+    left: 220px;
+    right: 0;
+    bottom: 0;
+    top: auto;
+    height: auto;
+    border-left: 0;
+    border-top: 1px solid var(--border);
+    padding: 10px 16px;
+    background: var(--console);
+    z-index: 300;
+  }
+  .console-hint, .tuner-top, .vol-box, .eq-presets { display: none; }
+  .console-card { box-shadow: none; border: 0; padding: 0; display: flex; align-items: center; gap: 12px; border-radius: 0; }
+  .tuner-screen { margin: 0; padding: 8px; width: 64px; flex-shrink: 0; }
+  .eq { height: 28px; }
+  .now-meta { margin: 0; flex: 1; min-width: 0; }
+  .p-title { font-size: 1rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .transport { margin: 0; gap: 8px; }
+  .play-btn { width: 44px; height: 44px; }
+  .console-actions { display: flex; }
+  .dock { padding: 8px; }
+  .dock span { display: none; }
+}
+
+@media (max-width: 760px) {
+  .app-shell { grid-template-columns: 1fr; }
+  .sidebar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    top: auto;
+    height: 60px;
+    flex-direction: row;
+    padding: 4px 12px calc(4px + env(safe-area-inset-bottom));
+    border-right: 0;
+    border-top: 1px solid var(--border);
+    background: var(--bg);
+    z-index: 350;
+  }
+  .brand, .sidebar-footer { display: none; }
+  .nav-menu { flex-direction: row; width: 100%; margin: 0; justify-content: space-around; }
+  .nav-tab { flex: 1; justify-content: center; padding: 8px; font-size: .82rem; }
+  .mobile-brand { display: flex; }
+  #mobileLangBtn { display: inline-flex !important; }
+  .center-pane { padding: 16px 16px 160px; }
+  .grid { grid-template-columns: 1fr; }
+  .presets-grid { grid-template-columns: repeat(2, 1fr); }
+  .presets-grid .preset-slot:last-child { grid-column: span 2; }
+  .console-pane { left: 0; bottom: calc(60px + env(safe-area-inset-bottom)); padding: 10px 14px; }
+  .t-btn { display: none; }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+</style>
+</head>
+<body>
+
+<div class="app-shell">
+  <!-- Left Navigation Rail -->
+  <aside class="sidebar">
+    <div>
+      <div class="brand">
+        <div class="brand-badge" aria-hidden="true">W</div>
+        <div>
+          <div class="brand-name">Waveloom</div>
+          <div class="brand-sub">Malayalam Studio</div>
+        </div>
+      </div>
+
+      <nav class="nav-menu" aria-label="Sections">
+        <button class="nav-tab active" data-view="stations">
+          <span class="nav-left">📻 Stations</span>
+          <small id="navTotalCount">0</small>
+        </button>
+        <button class="nav-tab" data-view="favourites">
+          <span class="nav-left">♥ Favourites</span>
+          <small id="favCount">0</small>
+        </button>
+        <button class="nav-tab" data-view="settings">
+          <span class="nav-left">🎨 Themes & Studio</span>
+        </button>
+      </nav>
+    </div>
+
+    <div class="sidebar-footer">
+      <div class="telemetry-box" id="stats">
+        <div class="telemetry-row"><span>Total stations</span><strong id="statTotal">0</strong></div>
+        <div class="telemetry-row"><span>Playable</span><strong class="green" id="statLive" style="color:var(--green)">0</strong></div>
+        <div class="telemetry-row"><span>Failed to play</span><strong class="red" id="statFailed" style="color:var(--red)">0</strong></div>
+        <div class="telemetry-row"><span>Last updated</span><strong id="statTime">—</strong></div>
+      </div>
+      <button class="lang-toggle" id="langBtn">🌐 മലയാളം</button>
+    </div>
+  </aside>
+
+  <!-- Center Main Directory -->
+  <main class="center-pane">
+    <div class="top-search-bar">
+      <div class="mobile-brand">
+        <div class="brand-badge" style="width:32px;height:32px;font-size:1rem">W</div>
+        <strong style="font-family:'Space Grotesk',sans-serif">Waveloom</strong>
+      </div>
+      <div class="search-wrap">
+        <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="search" id="searchInput" placeholder="Search stations" aria-label="Search stations" autocomplete="off">
+        <button class="search-clear" id="searchClear" aria-label="Clear search">✕</button>
+      </div>
+      <div class="quick-actions">
+        <button class="pill-btn primary" id="openAddModalBtn">➕ Add Station</button>
+        <button class="pill-btn" id="surpriseBtn">🎲 Surprise</button>
+        <button class="pill-btn" id="openDriveTopBtn">🚗 Drive</button>
+        <button class="pill-btn" id="mobileLangBtn" style="display:none">മലയാളം</button>
+      </div>
+    </div>
+
+    <div class="banner" id="offline" hidden>You are offline. Playback resumes when you reconnect.</div>
+
+    <section id="directory">
+      <div class="hero-header">
+        <div>
+          <h1 id="viewHeading">Malayalam <span>മലയാളം</span></h1>
+          <p id="viewSub">Akashvani, FM and online Malayalam stations. Tap a station to play.</p>
+        </div>
+        <div class="suggest" id="suggest"></div>
+      </div>
+
+      <!-- 5 Car-Stereo Quick Presets -->
+      <div class="presets-bar" id="presetsWrap">
+        <div class="presets-head">
+          <span>Quick Presets</span>
+          <small>Hold slot to save current station</small>
+        </div>
+        <div class="presets-grid" id="presetsGrid"></div>
+      </div>
+
+      <div id="recentWrap" hidden>
+        <div class="section-label">Recently played</div>
+        <div class="chips" id="recent"></div>
+      </div>
+
+      <div class="filter-bar" id="toolbar">
+        <div class="subtabs" id="subtabs" role="tablist">
+          <button class="subtab active" data-sub="All">All</button>
+          <button class="subtab" data-sub="Akashvani">Akashvani</button>
+          <button class="subtab" data-sub="FM">FM</button>
+          <button class="subtab" data-sub="Online">Online</button>
+          <button class="subtab" data-sub="Devotional">Devotional</button>
+          <button class="subtab" data-sub="Custom">Custom</button>
+        </div>
+        <div class="row">
+          <select id="stateSel" class="pill-btn" aria-label="Filter by region"><option value="">All regions</option></select>
+          <button class="pill-btn" id="sortBtn" aria-label="Toggle sort order">⇅ A–Z</button>
+        </div>
+      </div>
+
+      <div class="caption" id="caption" aria-live="polite">0 stations</div>
+      <div class="grid" id="grid"></div>
+    </section>
+
+    <section class="settings" id="settings">
+      <div class="hero-header">
+        <div>
+          <h1>Studio & Appearance <span>തീമുകൾ</span></h1>
+          <p>Customise themes, audio presets, custom streams, and alarms.</p>
+        </div>
+      </div>
+
+      <div class="settings-card">
+        <div class="section-label">Display mode</div>
+        <div class="mode" style="margin-bottom:20px">
+          <button id="lightBtn">Light</button>
+          <button id="darkBtn">Dark</button>
+        </div>
+        <div class="section-label">Colour theme</div>
+        <div class="swatches" id="swatches"></div>
+      </div>
+
+      <div class="settings-card">
+        <div class="section-label">Custom Stations</div>
+        <p class="caption" style="margin-bottom:10px">Manage your personally added .m3u8 or .mp3 stream URLs.</p>
+        <div id="customList" style="margin-bottom:12px"></div>
+        <button class="pill-btn primary" id="settingsAddBtn">➕ Add New Stream URL</button>
+      </div>
+      <div class="settings-card">
+        <div class="section-label">Native Android Audio & Car Bluetooth</div>
+        <div class="row" style="justify-content:space-between;margin-bottom:10px">
+          <span style="font-size:.88rem;font-weight:600">Auto-play when Car Bluetooth connects</span>
+          <button class="pill-btn" id="btAutoBtn">Off</button>
+        </div>
+        <p class="caption" style="margin:0">Automatically pauses on phone calls or Bluetooth disconnect, and keeps playback alive on the lock screen.</p>
+      </div>
+      <div class="settings-card">
+        <div class="section-label">Alarm</div>
+        <div class="row" style="margin-bottom:20px">
+          <input type="time" id="alarmTime" class="pill-btn" aria-label="Alarm time">
+          <button class="pill-btn" id="alarmBtn">Set alarm</button>
+          <span id="alarmNote" class="caption" style="margin:0"></span>
+        </div>
+
+        <div class="section-label">Stream health</div>
+        <div class="row" style="margin-bottom:20px">
+          <button class="pill-btn" id="checkBtn">Check all streams</button>
+          <span id="checkNote" class="caption" style="margin:0"></span>
+        </div>
+
+        <div class="section-label">Backup (Favourites, Presets & Custom Stations)</div>
+        <div class="row">
+          <button class="pill-btn" id="exportBtn">Export backup</button>
+          <button class="pill-btn" id="importBtn">Import</button>
+          <input type="file" id="importFile" accept="application/json" hidden>
+        </div>
+      </div>
+      <div class="settings-card">
+        <div class="section-label">App Updates & Version</div>
+        <div class="row" style="justify-content:space-between;margin-bottom:8px">
+          <span style="font-size:.88rem;font-weight:600">Current Version: <strong id="appVerLabel" style="color:var(--accent)">v1.0.0</strong></span>
+          <button class="pill-btn primary" id="checkUpdateBtn">🔄 Check for Updates</button>
+        </div>
+        <p id="updateStatusNote" class="caption" style="margin:0">Checks GitHub Releases for newer APK versions.</p>
+      </div>
+      <div class="settings-card">
+        <div class="section-label">Most listened</div>
+        <div id="statsList" class="caption" style="line-height:1.9;margin-bottom:16px">Nothing yet.</div>
+        <div class="section-label">Hidden stations</div>
+        <div id="hiddenList" class="caption" style="line-height:1.9;margin:0">None.</div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Right Broadcast Console -->
+  <aside class="console-pane" id="playerWrap" aria-label="Player">
+    <div class="console-card">
+      <div class="tuner-screen" id="lcd">
+        <div class="tuner-top">
+          <span class="live-pill"><span class="lcd-dot"></span><span id="lcdMode">READY</span></span>
+          <span id="vizTag">AUTO-GUARD</span>
+        </div>
+        <div class="eq" id="eq"></div>
+      </div>
+
+     <div class="now-meta">
+        <div class="p-cat" id="pCat">Malayalam</div>
+        <div class="p-title" id="pTitle">Select a station</div>
+        <div class="p-status" id="pStatus" aria-live="polite">Tap any station card to tune in</div>
+        <!-- Live Song / Program Title (ICY Metadata) -->
+        <div id="icyMeta" style="font-size:.76rem;color:var(--console-accent);margin-top:4px;font-weight:600;display:none">🎵 <span id="icyText"></span></div>
+      </div>
+
+      <!-- Live Time-Shift / Rewind Buffer Controls -->
+      <div id="timeshiftBox" style="background:rgba(0,0,0,.28);padding:8px 10px;border-radius:10px;margin-bottom:12px">
+        <div style="display:flex;justify-content:space-between;align-items:center;font-size:.7rem;margin-bottom:6px">
+          <span style="opacity:.75" id="bufferLabel">⏪ Live Buffer: 0s</span>
+          <div style="display:flex;gap:6px">
+            <button type="button" id="rew15Btn" style="background:rgba(255,255,255,.12);border:0;color:#fff;padding:2px 8px;border-radius:6px;cursor:pointer;font-weight:700">-15s</button>
+            <button type="button" id="goLiveBtn" style="background:var(--console-accent);color:var(--console);border:0;padding:2px 8px;border-radius:6px;cursor:pointer;font-weight:700;display:none">● GO LIVE</button>
+          </div>
+        </div>
+        <input type="range" id="seekBar" min="0" max="0" value="0" step="1" style="width:100%;accent-color:var(--console-accent)" aria-label="Rewind Live Buffer">
+      </div>
+
+      <div class="transport">
+        <button class="t-btn" id="prevBtn" aria-label="Previous station">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="19 20 9 12 19 4 19 20"/><line x1="5" y1="19" x2="5" y2="5"/></svg>
+        </button>
+        <button class="play-btn" id="playBtn" aria-label="Play or pause">
+          <svg id="playIcon" width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+        </button>
+        <button class="t-btn" id="nextBtn" aria-label="Next station">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 4 15 12 5 20 5 4"/><line x1="19" y1="5" x2="19" y2="19"/></svg>
+        </button>
+      </div>
+
+      <!-- 5-Band Audio Equalizer Presets -->
+      <div class="eq-presets" role="group" aria-label="Audio Equalizer Presets">
+        <button class="eq-p-btn active" data-eq="flat">Flat</button>
+        <button class="eq-p-btn" data-eq="bass">Bass+</button>
+        <button class="eq-p-btn" data-eq="vocal">Vocal</button>
+        <button class="eq-p-btn" data-eq="night">Night</button>
+      </div>
+
+      <label class="vol-box" title="Volume">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/></svg>
+        <input type="range" id="vol" min="0" max="1" step="0.05" aria-label="Volume">
+      </label>
+
+      <div class="console-actions">
+        <button class="dock" id="recBtn" aria-label="Record live audio">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="7"/></svg>
+          <span id="recTxt">Rec</span>
+        </button>
+        <button class="dock" id="favBtn" aria-label="Favourite">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          <span>Save</span>
+        </button>
+        <button class="dock" id="driveBtn" aria-label="Car Driving Mode">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="7" rx="2"/><path d="M5 11l2-5h10l2 5"/><circle cx="7.5" cy="15.5" r="1.5"/><circle cx="16.5" cy="15.5" r="1.5"/></svg>
+          <span>Drive</span>
+        </button>
+        <button class="dock" id="sleepBtn" aria-label="Sleep timer">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+          <span id="sleepTxt">Sleep</span>
+        </button>
+        <button class="dock" id="shareBtn" aria-label="Share station">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/></svg>
+          <span>Share</span>
+        </button>
+        <button class="dock" id="adSkipBtn" aria-label="Auto-Skip Ads or Silence">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 4 15 12 5 20 5 4"/><line x1="19" y1="5" x2="19" y2="19"/></svg>
+          <span id="adSkipTxt">Ad Guard</span>
+        </button>
+        <button class="dock" id="hideBtn" aria-label="Hide this station">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.9 17.9A10.9 10.9 0 0 1 12 20C5 20 1 12 1 12a18.5 18.5 0 0 1 5.1-5.9M9.9 4.2A9.1 9.1 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.2 3.2M1 1l22 22"/></svg>
+          <span>Hide</span>
+        </button>
+        <button class="dock" id="castBtn" aria-label="Cast to a device" hidden>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 8V6a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-6"/><path d="M2 12a9 9 0 0 1 8 8M2 16a5 5 0 0 1 4 4M2 20h.01"/></svg>
+          <span>Cast</span>
+        </button>
+      </div>
+    </div>
+
+    <div class="console-hint">
+      Shortcuts: <strong>1–5</strong> Presets · <strong>Space</strong> Play · <strong>D</strong> Drive
+    </div>
+  </aside>
+</div>
+
+<!-- Add Custom Station Modal -->
+<div class="modal-backdrop" id="addModal" hidden>
+  <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="addModalTitle">
+    <h3 id="addModalTitle">Add Custom Radio Stream</h3>
+    <form id="addStationForm">
+      <div class="field">
+        <label for="csName">Station Name</label>
+        <input type="text" id="csName" placeholder="e.g., Kozhikode Live FM" required>
+      </div>
+      <div class="field">
+        <label for="csUrl">Stream URL (.m3u8, .mp3, .aac)</label>
+        <input type="url" id="csUrl" placeholder="https://example.com/stream.m3u8" required>
+      </div>
+      <div class="field">
+        <label for="csType">Category</label>
+        <select id="csType">
+          <option value="Custom">Custom</option>
+          <option value="FM">FM</option>
+          <option value="Online">Online</option>
+          <option value="Akashvani">Akashvani</option>
+          <option value="Devotional">Devotional</option>
+        </select>
+      </div>
+      <div class="row" style="justify-content:flex-end;margin-top:16px">
+        <button type="button" class="pill-btn" id="cancelAddBtn">Cancel</button>
+        <button type="submit" class="pill-btn primary">Save & Play</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Car / Driving Mode Fullscreen Overlay -->
+<div class="drive-overlay" id="driveOverlay" hidden>
+  <div class="drive-top">
+    <span class="drive-badge" id="driveStatusBadge">🚗 DRIVE MODE · SCREEN AWAKE</span>
+    <button class="drive-exit" id="exitDriveBtn">✕ Exit Drive</button>
+  </div>
+  <div class="drive-center">
+    <div class="drive-cat" id="driveCat">MALAYALAM RADIO</div>
+    <div class="drive-title" id="driveTitle">Select a station</div>
+    <div class="drive-status" id="driveSubStatus">Ready to play</div>
+  </div>
+  <div>
+    <div class="drive-presets" id="drivePresetsGrid"></div>
+    <div class="drive-controls">
+      <button class="drive-btn" id="drivePrevBtn" aria-label="Previous station">
+        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="19 20 9 12 19 4 19 20"/><line x1="5" y1="19" x2="5" y2="5"/></svg>
+        <span>PREV</span>
+      </button>
+      <button class="drive-btn main" id="drivePlayBtn" aria-label="Play or pause">
+        <svg id="drivePlayIcon" width="44" height="44" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+        <span id="drivePlayTxt">PLAY</span>
+      </button>
+      <button class="drive-btn" id="driveNextBtn" aria-label="Next station">
+        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 4 15 12 5 20 5 4"/><line x1="19" y1="5" x2="19" y2="19"/></svg>
+        <span>NEXT</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status"></div>
+<audio id="audio" preload="none" crossorigin="anonymous" x-webkit-airplay="allow"></audio>
+
+<script>
+const $ = id => document.getElementById(id);
+const store = {
+  get(k, d) { try { const v = localStorage.getItem(k); return v == null ? d : JSON.parse(v); } catch { return d; } },
+  set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} }
+};
+
+/* ---------- Kerala & Nature Theme System ---------- */
+const THEMES = [
+  ['thanal', 'Thanal', 'തണൽ', 'Canopy Emerald', '#F4F6F4', '#132019', '#1E6B4B', '#10241B', '#6EE7B7'],
+  ['mazha', 'Mazha', 'മഴ', 'Monsoon Slate', '#F2F5F8', '#15202B', '#2563EB', '#0F172A', '#60A5FA'],
+  ['veyil', 'Veyil', 'വെയിൽ', 'Golden Amber', '#FAF6F0', '#271C12', '#B45309', '#24170C', '#FBBF24'],
+  ['paathira', 'Paathira', 'പാതിരാ', 'Midnight Indigo', '#F4F3F8', '#1B1829', '#4F46E5', '#151226', '#A5B4FC'],
+  ['chembarathi', 'Chembarathi', 'ചെമ്പരത്തി', 'Hibiscus Crimson', '#FAF3F4', '#261317', '#BE123C', '#240E14', '#FDA4AF'],
+  ['kadal', 'Kadal', 'കടൽ', 'Arabian Teal', '#F0F7F7', '#0F2426', '#0F766E', '#0B2224', '#5EEAD4'],
+  ['elakka', 'Elakka', 'ഏലക്ക', 'Cardamom Sage', '#F5F6F2', '#1D2118', '#4D7C0F', '#181E12', '#BEF264'],
+  ['kovilakam', 'Kovilakam', 'കോവിലകം', 'Laterite & Brass', '#F8F4F0', '#291914', '#9A3412', '#26140E', '#FDBA74']
+].map(([id, name, ml, en, bg, text, accent, consoleCol, consoleAcc]) => ({ id, name, ml, en, bg, text, accent, consoleCol, consoleAcc }));
+
+/* ---------- Curated stations ---------- */
+const CURATED = [
+  { id:'air-ananthapuri', name:'AIR Ananthapuri FM', type:'Akashvani', detail:'101.9 FM', url:'https://air.pc.cdn.bitgravity.com/air/live/pbaudio230/playlist.m3u8' },
+  { id:'air-rainbow-kochi', name:'AIR FM Rainbow Kochi', type:'Akashvani', detail:'107.5 FM', url:'https://air.pc.cdn.bitgravity.com/air/live/pbaudio045/playlist.m3u8' },
+  { id:'air-kannur', name:'AIR Kannur', type:'Akashvani', detail:'Live', url:'https://air.pc.cdn.bitgravity.com/air/live/pbaudio173/playlist.m3u8' },
+  { id:'air-thrissur', name:'AIR Thrissur', type:'Akashvani', detail:'630 AM', url:'https://air.pc.cdn.bitgravity.com/air/live/pbaudio036/playlist.m3u8' },
+  { id:'hit-967', name:'Hit 96.7 FM', type:'FM', detail:'96.7 FM', url:'https://stream.arnonline.ae/hit967/playlist.m3u8' },
+  { id:'suno-917', name:'Radio Suno 91.7', type:'FM', detail:'91.7 FM', url:'https://playerservices.streamtheworld.com/api/livestream-redirect/SUNO917.mp3' },
+  { id:'radio-asia', name:'Radio Asia', type:'FM', detail:'1269 AM', url:'https://stream.radiojar.com/4ywdgup3bnzuv' }
+];
+const API_HOSTS = ['de1', 'nl1', 'at1'];
+const CACHE_KEY = 'waveloom_cache_v5', CACHE_TTL = 6 * 3600 * 1000;
+
+/* ---------- State ---------- */
+let customStations = store.get('waveloom_custom_v1', []);
+let presets = store.get('waveloom_presets_v1', ['air-ananthapuri', 'air-rainbow-kochi', 'hit-967', 'suno-917', '']);
+let allStations = [...customStations, ...CURATED];
+let view = 'stations', subFilter = 'All', sortAsc = true, query = '', loading = true;
+let favs = store.get('waveloom_favs_v2', []);
+let themeId = store.get('waveloom_studio_theme', 'thanal');
+let dark = store.get('waveloom_dark_mode', window.matchMedia('(prefers-color-scheme: dark)').matches);
+const failed = new Set();
+let hidden = store.get('waveloom_hidden', []), recents = store.get('waveloom_recent', []), listen = store.get('waveloom_listen', {});
+let region = '', loaded = false, wasPlaying = false, alarmTimer = null;
+let cur = null, playing = false, hls = null, corsMode = true;
+const audio = $('audio');
+const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* ---------- Native Share / File Save Helper (APK WebView Compatible) ---------- */
+async function shareOrDownloadFile(blob, fileName, mimeType) {
+  const file = new File([blob], fileName, { type: mimeType });
+  if (navigator.canShare && navigator.canShare({ files: [file] })) {
+    try {
+      await navigator.share({ files: [file], title: fileName });
+      return true;
+    } catch (e) {
+      if (e.name === 'AbortError') return true;
+    }
+  }
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = fileName;
+  a.click();
+  setTimeout(() => URL.revokeObjectURL(url), 2000);
+  return false;
+}
+
+/* ---------- 5 Car-Stereo Quick Presets ---------- */
+function renderPresets() {
+  const mainGrid = $('presetsGrid');
+  const driveGrid = $('drivePresetsGrid');
+  mainGrid.innerHTML = presets.map((id, idx) => {
+    const st = id ? findStation(id) : null;
+    const isCur = st && cur && cur.id === st.id;
+    return `<button class="preset-slot ${st ? '' : 'empty'} ${isCur ? 'active' : ''}" data-preset="${idx}" title="Click to play · Hold to assign current station">
+      <span class="preset-num">${idx + 1}</span>
+      <span class="preset-name">${st ? esc(st.name) : 'Empty'}</span>
+    </button>`;
+  }).join('');
+
+  driveGrid.innerHTML = presets.map((id, idx) => {
+    const st = id ? findStation(id) : null;
+    const isCur = st && cur && cur.id === st.id;
+    return `<button class="drive-preset-btn ${isCur ? 'active' : ''}" data-preset="${idx}">
+      ${idx + 1}. ${st ? esc(st.name) : 'Empty'}
+    </button>`;
+  }).join('');
+}
+
+function triggerPreset(idx) {
+  const id = presets[idx];
+  const st = id ? findStation(id) : null;
+  if (st) {
+    playStation(st);
+  } else if (cur) {
+    assignPreset(idx);
+  } else {
+    toast(`Slot ${idx + 1} is empty. Play a station and hold slot ${idx + 1} to save.`);
+  }
+}
+
+function assignPreset(idx) {
+  if (!cur) { toast('Play a station first to assign a preset'); return; }
+  presets[idx] = cur.id;
+  store.set('waveloom_presets_v1', presets);
+  renderPresets();
+  toast(`Saved ${cur.name} to Preset ${idx + 1}`);
+}
+
+let pressTimer = null, pressHandled = false;
+function bindPresetInteractions(container) {
+  container.addEventListener('pointerdown', e => {
+    const btn = e.target.closest('[data-preset]');
+    if (!btn) return;
+    pressHandled = false;
+    const idx = +btn.dataset.preset;
+    pressTimer = setTimeout(() => {
+      pressHandled = true;
+      assignPreset(idx);
+    }, 600);
+  });
+  container.addEventListener('pointerup', e => {
+    clearTimeout(pressTimer);
+    const btn = e.target.closest('[data-preset]');
+    if (btn && !pressHandled) triggerPreset(+btn.dataset.preset);
+  });
+  container.addEventListener('pointerleave', () => clearTimeout(pressTimer));
+  container.addEventListener('contextmenu', e => {
+    const btn = e.target.closest('[data-preset]');
+    if (btn) { e.preventDefault(); clearTimeout(pressTimer); assignPreset(+btn.dataset.preset); }
+  });
+}
+bindPresetInteractions($('presetsGrid'));
+bindPresetInteractions($('drivePresetsGrid'));
+
+/* ---------- Auto-Reconnect Stream Watchdog (For Driving / Weak Mobile Data) ---------- */
+let lastAudioTime = 0, stallTicks = 0;
+setInterval(() => {
+  if (!playing || !cur || audio.paused || !navigator.onLine) {
+    stallTicks = 0;
+    return;
+  }
+  if (audio.currentTime === lastAudioTime) {
+    stallTicks++;
+    if (stallTicks === 2) setStatus('Buffering…');
+    if (stallTicks >= 3) {
+      stallTicks = 0;
+      setStatus('Reconnecting stream…');
+      const st = cur;
+      cur = null;
+      playStation(st, corsMode);
+    }
+  } else {
+    lastAudioTime = audio.currentTime;
+    stallTicks = 0;
+  }
+}, 2000);
+
+/* ---------- Web Audio API: 5-Band Equalizer + Real-Time FFT Visualizer ---------- */
+let audioCtx = null, mediaSrc = null, analyser = null, eqFilters = [], activeEqPreset = 'flat';
+const EQ_BANDS = [60, 230, 910, 3600, 14000];
+const EQ_PRESETS = {
+  flat:  [0, 0, 0, 0, 0],
+  bass:  [8, 5, 0, -1, 1],
+  vocal: [-3, 1, 6, 5, 1],
+  night: [-5, -1, 2, -2, -6]
+};
+
+function initAudioGraph() {
+  if (audioCtx || !corsMode) return;
+  try {
+    const Ctx = window.AudioContext || window.webkitAudioContext;
+    audioCtx = new Ctx();
+    mediaSrc = audioCtx.createMediaElementSource(audio);
+    analyser = audioCtx.createAnalyser();
+    analyser.fftSize = 64;
+    analyser.smoothingTimeConstant = 0.78;
+
+    eqFilters = EQ_BANDS.map((freq, i) => {
+      const f = audioCtx.createBiquadFilter();
+      f.type = i === 0 ? 'lowshelf' : i === EQ_BANDS.length - 1 ? 'highshelf' : 'peaking';
+      f.frequency.value = freq;
+      f.Q.value = 1.0;
+      f.gain.value = EQ_PRESETS[activeEqPreset][i];
+      return f;
+    });
+
+    let node = mediaSrc;
+    eqFilters.forEach(f => { node.connect(f); node = f; });
+    node.connect(analyser);
+    analyser.connect(audioCtx.destination);
+  } catch (e) {
+    console.warn('Web Audio API unavailable for this stream:', e);
+  }
+}
+
+function setEqPreset(preset) {
+  activeEqPreset = preset;
+  document.querySelectorAll('.eq-p-btn').forEach(b => b.classList.toggle('active', b.dataset.eq === preset));
+  const gains = EQ_PRESETS[preset] || EQ_PRESETS.flat;
+  if (eqFilters.length) {
+    eqFilters.forEach((f, i) => f.gain.setTargetAtTime(gains[i], audioCtx.currentTime, 0.05));
+  }
+  toast(`EQ: ${preset.toUpperCase()}`);
+}
+document.querySelectorAll('.eq-p-btn').forEach(b => b.onclick = () => setEqPreset(b.dataset.eq));
+
+/* ---------- Live Stream Recorder ---------- */
+let recorder = null, recChunks = [], recTimer = null, recSeconds = 0;
+
+function toggleRecording() {
+  if (recorder && recorder.state === 'recording') {
+    recorder.stop();
+    return;
+  }
+  if (!cur || !playing) {
+    toast('Play a station first to record');
+    return;
+  }
+  try {
+    const stream = audio.captureStream ? audio.captureStream() : audio.mozCaptureStream ? audio.mozCaptureStream() : null;
+    if (!stream) {
+      toast('Recording is not supported in this WebView');
+      return;
+    }
+    const mime = MediaRecorder.isTypeSupported('audio/webm;codecs=opus') ? 'audio/webm;codecs=opus'
+               : MediaRecorder.isTypeSupported('audio/ogg;codecs=opus') ? 'audio/ogg;codecs=opus' : '';
+    recorder = mime ? new MediaRecorder(stream, { mimeType: mime }) : new MediaRecorder(stream);
+    recChunks = [];
+    recorder.ondataavailable = e => { if (e.data && e.data.size > 0) recChunks.push(e.data); };
+    recorder.onstop = async () => {
+      clearInterval(recTimer);
+      $('recBtn').classList.remove('recording');
+      $('recTxt').textContent = 'Rec';
+      if (!recChunks.length) {
+        toast('Stream blocked direct audio capture (CORS restriction)');
+        return;
+      }
+      const ext = recorder.mimeType.includes('ogg') ? 'ogg' : 'webm';
+      const finalMime = recorder.mimeType || 'audio/webm';
+      const blob = new Blob(recChunks, { type: finalMime });
+      const safeName = cur.name.replace(/[^a-z0-9]/gi, '_').toLowerCase();
+      const stampStr = new Date().toISOString().slice(0, 16).replace(/[:T]/g, '-');
+      const shared = await shareOrDownloadFile(blob, `${safeName}_${stampStr}.${ext}`, finalMime);
+      if (!shared) toast('Recording saved to device!');
+    };
+    recorder.start(500);
+    recSeconds = 0;
+    $('recBtn').classList.add('recording');
+    $('recTxt').textContent = '00:00';
+    recTimer = setInterval(() => {
+      recSeconds++;
+      const m = String(Math.floor(recSeconds / 60)).padStart(2, '0');
+      const s = String(recSeconds % 60).padStart(2, '0');
+      $('recTxt').textContent = `${m}:${s}`;
+    }, 1000);
+    toast(`Recording ${cur.name}…`);
+  } catch (e) {
+    toast('Cannot record this protected stream');
+  }
+}
+$('recBtn').onclick = toggleRecording;
+
+/* ---------- Theme ---------- */
+function applyTheme() {
+  const t = THEMES.find(x => x.id === themeId) || THEMES[0];
+  const r = document.documentElement, s = r.style;
+  s.setProperty('--bg', dark ? '#0F1211' : t.bg);
+  s.setProperty('--text', dark ? '#F1F5F3' : t.text);
+  s.setProperty('--accent', dark ? t.consoleAcc : t.accent);
+  s.setProperty('--console', t.consoleCol);
+  s.setProperty('--console-accent', t.consoleAcc);
+  r.classList.toggle('dark', dark);
+  document.querySelector('meta[name=theme-color]').content = dark ? '#0F1211' : t.bg;
+  $('lightBtn').classList.toggle('active', !dark);
+  $('darkBtn').classList.toggle('active', dark);
+  document.querySelectorAll('.swatch').forEach(el => el.classList.toggle('active', el.dataset.id === themeId));
+}
+function initThemeUI() {
+  $('swatches').innerHTML = THEMES.map(t => `
+    <button class="swatch" data-id="${t.id}" aria-label="${t.name} theme">
+      <div class="swatch-bar">
+        <span style="background:${t.bg}"></span>
+        <span style="background:${t.accent}"></span>
+        <span style="background:${t.consoleCol}"></span>
+        <span style="background:${t.consoleAcc}"></span>
+      </div>
+      <span class="n">${t.name}</span>
+      <span class="m">${t.ml}</span>
+      <span class="e">${t.en}</span>
+    </button>`).join('');
+  $('swatches').addEventListener('click', e => {
+    const b = e.target.closest('.swatch'); if (!b) return;
+    themeId = b.dataset.id; store.set('waveloom_studio_theme', themeId); applyTheme();
+  });
+  $('lightBtn').onclick = () => { dark = false; store.set('waveloom_dark_mode', false); applyTheme(); };
+  $('darkBtn').onclick = () => { dark = true; store.set('waveloom_dark_mode', true); applyTheme(); };
+  applyTheme();
+}
+
+/* ---------- Helpers ---------- */
+const esc = s => String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+const hue = s => { let h = 0; for (const c of s) h = (h * 31 + c.charCodeAt(0)) % 360; return h; };
+let toastTimer;
+function toast(msg) {
+  const t = $('toast'); t.textContent = msg; t.classList.add('show');
+  clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove('show'), 2600);
+}
+const setStatus = s => {
+  $('pStatus').textContent = tr(s);
+  $('driveSubStatus').textContent = tr(s);
+};
+
+function classify(name, tags) {
+  const t = `${name} ${tags}`.toLowerCase();
+  if (t.includes('air ') || t.includes('akashvani')) return 'Akashvani';
+  if (/christian|quran|islam|hindu|bhakti|devotional|jesus|amen|shalom|church|temple/.test(t)) return 'Devotional';
+  if (t.includes('fm') || /\b\d{2,3}\.\d\b/.test(t)) return 'FM';
+  return 'Online';
+}
+
+/* ---------- Directory loading ---------- */
+function toStation(s) {
+  const name = s.name.trim();
+  const freq = name.match(/\b(\d{2,3}\.\d)\b/);
+  return {
+    id: 'rb-' + s.stationuuid, name,
+    type: classify(name, s.tags || ''),
+    detail: freq ? `${freq[1]} FM` : 'Live',
+    url: s.url_resolved,
+    logo: s.favicon && s.favicon.startsWith('https://') ? s.favicon : '',
+    state: (s.state || '').trim(), bitrate: s.bitrate || 0, codec: (s.codec || '').toUpperCase(), tags: (s.tags || '').toLowerCase()
+  };
+}
+function mergeFetched(list) {
+  const base = [...customStations, ...CURATED];
+  const names = new Set(base.map(s => s.name.toLowerCase()));
+  const urls = new Set(base.map(s => s.url));
+  const extra = list.filter(s => {
+    const k = s.name.toLowerCase();
+    if (names.has(k) || urls.has(s.url)) return false;
+    names.add(k); urls.add(s.url); return true;
+  });
+  allStations = [...base, ...extra];
+}
+async function fetchFrom(host) {
+  const ctl = new AbortController(), timer = setTimeout(() => ctl.abort(), 8000);
+  try {
+    const res = await fetch(`https://${host}.api.radio-browser.info/json/stations/bylanguage/malayalam?limit=200&hidebroken=true&order=clickcount&reverse=true`, { signal: ctl.signal });
+    if (!res.ok) throw new Error(res.status);
+    return await res.json();
+  } finally { clearTimeout(timer); }
+}
+async function loadDirectory() {
+  const cache = store.get(CACHE_KEY, null);
+  if (cache) { mergeFetched(cache.list); stamp(cache.time); }
+  render();
+  if (cache && Date.now() - cache.time < CACHE_TTL) { loading = false; render(); return; }
+  for (const host of API_HOSTS) {
+    try {
+      const data = await fetchFrom(host);
+      const list = data.filter(s => s.url_resolved && s.url_resolved.startsWith('https://')).map(toStation);
+      store.set(CACHE_KEY, { time: Date.now(), list });
+      mergeFetched(list); stamp(Date.now()); loading = false; render(); return;
+    } catch (e) { console.warn('Directory server failed:', host, e); }
+  }
+  loading = false; render();
+  if (!cache) toast('Could not load the full station list. Showing featured stations.');
+}
+function stamp(ms) {
+  const d = new Date(ms);
+  $('statTime').textContent = d.toLocaleDateString('en-GB', { day:'2-digit', month:'short' }) + ', ' + d.toLocaleTimeString('en-GB', { hour:'2-digit', minute:'2-digit' });
+}
+
+/* ---------- Custom Station Management ---------- */
+function openAddModal() { $('addModal').hidden = false; $('csName').focus(); }
+function closeAddModal() { $('addModal').hidden = true; $('addStationForm').reset(); }
+$('openAddModalBtn').onclick = openAddModal;
+$('settingsAddBtn').onclick = openAddModal;
+$('cancelAddBtn').onclick = closeAddModal;
+$('addModal').addEventListener('click', e => { if (e.target === $('addModal')) closeAddModal(); });
+
+$('addStationForm').onsubmit = e => {
+  e.preventDefault();
+  const name = $('csName').value.trim();
+  const url = $('csUrl').value.trim();
+  const type = $('csType').value;
+  if (!name || !url) return;
+  const newSt = {
+    id: 'custom-' + Date.now(),
+    name,
+    type,
+    detail: 'Custom Stream',
+    url,
+    isCustom: true
+  };
+  customStations = [newSt, ...customStations];
+  store.set('waveloom_custom_v1', customStations);
+  allStations = [newSt, ...allStations];
+  closeAddModal();
+  render();
+  extras();
+  playStation(newSt);
+  toast(`Added ${name}`);
+};
+
+function removeCustomStation(id) {
+  customStations = customStations.filter(s => s.id !== id);
+  store.set('waveloom_custom_v1', customStations);
+  allStations = allStations.filter(s => s.id !== id);
+  favs = favs.filter(f => f !== id);
+  store.set('waveloom_favs_v2', favs);
+  render();
+  extras();
+  toast('Custom station removed');
+}
+
+/* ---------- List + render ---------- */
+function filtered() {
+  let list = allStations.filter(s => !hidden.includes(s.id));
+  if (view === 'favourites') list = favs.map(id => list.find(s => s.id === id)).filter(Boolean);
+  else {
+    if (subFilter === 'Custom') list = list.filter(s => s.isCustom || s.type === 'Custom');
+    else if (subFilter !== 'All') list = list.filter(s => s.type === subFilter);
+    if (region) list = list.filter(s => s.state === region);
+  }
+  if (query) { const q = query.toLowerCase(); list = list.filter(s => (s.name + ' ' + s.type + ' ' + s.detail + ' ' + (s.tags || '')).toLowerCase().includes(q)); }
+  if (view !== 'favourites') list.sort((a, b) => sortAsc ? a.name.localeCompare(b.name) : b.name.localeCompare(a.name));
+  return list;
+}
+function render() {
+  buildRegions(); renderHome(); renderPresets();
+  $('favCount').textContent = favs.length;
+  $('navTotalCount').textContent = allStations.length;
+  $('statTotal').textContent = allStations.length;
+  $('statLive').textContent = Math.max(0, allStations.length - failed.size);
+  $('statFailed').textContent = failed.size;
+  document.querySelectorAll('.subtab').forEach(t => {
+    const c = t.dataset.sub;
+    const count = c === 'All' ? allStations.length
+                : c === 'Custom' ? allStations.filter(s => s.isCustom || s.type === 'Custom').length
+                : allStations.filter(s => s.type === c).length;
+    t.textContent = `${tr(c)} (${count})`;
+  });
+  const list = filtered();
+  $('caption').textContent = (lang === 'ml' ? `${list.length} സ്റ്റേഷനുകൾ` : `${list.length} station${list.length === 1 ? '' : 's'}`) + (loading ? (lang === 'ml' ? ' · കൂടുതൽ ലോഡ് ചെയ്യുന്നു…' : ' · loading more…') : '');
+  if (!list.length) {
+    $('grid').innerHTML = `<div class="empty">${view === 'favourites' && !query ? 'No favourites yet. Tap the heart on any station to save it here.' : 'No stations match your filter.'}</div>`;
+    return;
+  }
+  $('grid').innerHTML = list.map(st => {
+    const isCur = cur && cur.id === st.id, isFav = favs.includes(st.id);
+    return `<div class="cell ${isCur ? 'active' : ''} ${failed.has(st.id) ? 'failed' : ''}" role="button" tabindex="0" data-id="${esc(st.id)}" aria-label="Play ${esc(st.name)}">
+      <span class="av" style="--h:${hue(st.name)}">${esc([...st.name.replace(/^(AIR|FM|Radio)\s+/i, '')][0] || '♪').toUpperCase()}${st.logo ? `<img src="${esc(st.logo)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">` : ''}</span>
+      <div class="info"><div class="name">${esc(st.name)}</div><div class="meta">${esc(st.type)} · ${esc(st.detail)}${st.bitrate ? ` · ${st.bitrate}k ${esc(st.codec)}` : ''}${failed.has(st.id) ? ' · offline' : ''}</div></div>${view === 'favourites' ? '<span class="mv"><button data-move="-1" aria-label="Move up">▲</button><button data-move="1" aria-label="Move down">▼</button></span>' : ''}
+      <button class="fav ${isFav ? 'on' : ''}" data-fav="${esc(st.id)}" aria-label="${isFav ? 'Remove from' : 'Add to'} favourites" aria-pressed="${isFav}">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="${isFav ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+      </button></div>`;
+  }).join('');
+  if (loading) $('grid').insertAdjacentHTML('beforeend', '<div class="cell sk" aria-hidden="true"></div>'.repeat(4));
+}
+$('grid').addEventListener('click', e => {
+  const mv = e.target.closest('[data-move]');
+  if (mv) { moveFav(mv.closest('.cell').dataset.id, +mv.dataset.move); return; }
+  const f = e.target.closest('[data-fav]');
+  if (f) { toggleFav(f.dataset.fav); return; }
+  const c = e.target.closest('.cell');
+  if (c) { const st = allStations.find(s => s.id === c.dataset.id); if (st) playStation(st); }
+});
+$('grid').addEventListener('keydown', e => {
+  if ((e.key === 'Enter' || e.key === ' ') && e.target.classList.contains('cell')) { e.preventDefault(); e.target.click(); }
+});
+function toggleFav(id) {
+  favs = favs.includes(id) ? favs.filter(f => f !== id) : [...favs, id];
+  store.set('waveloom_favs_v2', favs);
+  favBtnState(); render();
+}
+
+/* ---------- Real-Time FFT Equalizer Visualizer ---------- */
+const COLS = 8, SEGS = 7, eqCols = [];
+let eqRaf = null, fftData = null;
+(function buildEq() {
+  for (let c = 0; c < COLS; c++) {
+    const col = document.createElement('div'); col.className = 'eq-col';
+    const segs = [];
+    for (let s = 0; s < SEGS; s++) { const d = document.createElement('div'); d.className = 'eq-seg'; col.appendChild(d); segs.push(d); }
+    $('eq').appendChild(col); eqCols.push(segs);
+  }
+})();
+function setEq(levels) { eqCols.forEach((segs, c) => segs.forEach((s, i) => s.classList.toggle('lit', i < levels[c]))); }
+
+function eqStart() {
+  $('lcd').classList.add('on');
+  cancelAnimationFrame(eqRaf);
+  if (reduceMotion) { setEq([3,4,6,5,6,4,3,2]); return; }
+  if (analyser && !fftData) fftData = new Uint8Array(analyser.frequencyBinCount);
+
+  const loop = () => {
+    if (!playing) return;
+    if (analyser && corsMode) {
+      analyser.getByteFrequencyData(fftData);
+      const sum = fftData.reduce((a, b) => a + b, 0);
+      if (sum > 0) {
+        const levels = eqCols.map((_, c) => {
+          const val = fftData[c * 2] || 0;
+          return Math.max(1, Math.min(SEGS, Math.ceil((val / 255) * SEGS)));
+        });
+        setEq(levels);
+        eqRaf = requestAnimationFrame(loop);
+        return;
+      }
+    }
+    const t = Date.now() / 160;
+    setEq(eqCols.map((_, c) => Math.max(1, Math.min(SEGS, Math.round(2 + Math.sin(t + c * 0.8) * 2 + Math.random() * 2)))));
+    eqRaf = requestAnimationFrame(loop);
+  };
+  eqRaf = requestAnimationFrame(loop);
+}
+function eqStop() {
+  $('lcd').classList.remove('on');
+  cancelAnimationFrame(eqRaf);
+  setEq(Array(COLS).fill(1));
+}
+
+/* ---------- Playback (with Auto-CORS Fallback) ---------- */
+function destroyHls() { if (hls) { hls.destroy(); hls = null; } }
+function playStation(st, allowNoCorsRetry = true) {
+  if (recorder && recorder.state === 'recording') recorder.stop();
+  if (cur && cur.id === st.id && loaded && !failed.has(st.id)) { togglePlay(); return; }
+  cur = st; loaded = true; stallTicks = 0; lastAudioTime = 0; track(st);
+  $('lcdMode').textContent = st.type === 'Akashvani' ? 'AIR' : 'ON AIR';
+  $('pCat').textContent = `Malayalam · ${st.type}`;
+  $('pTitle').textContent = st.name;
+  $('driveCat').textContent = `MALAYALAM · ${st.type.toUpperCase()}`;
+  $('driveTitle').textContent = st.name;
+  setStatus('Connecting…');
+  favBtnState(); eqStop(); playing = false; updatePlayIcon();
+
+  destroyHls(); audio.pause(); audio.removeAttribute('src'); audio.load();
+  if (allowNoCorsRetry) {
+    corsMode = true;
+    audio.setAttribute('crossorigin', 'anonymous');
+    initAudioGraph();
+    if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+  }
+
+  const isHls = /\.m3u8(\?|$)/.test(st.url);
+  if (isHls && window.Hls && Hls.isSupported()) {
+    let retries = 0;
+    hls = new Hls({ enableWorker: true });
+    hls.loadSource(st.url); hls.attachMedia(audio);
+    hls.on(Hls.Events.MANIFEST_PARSED, () => startAudio(st, allowNoCorsRetry));
+    hls.on(Hls.Events.ERROR, (_, data) => {
+      if (!data.fatal || cur?.id !== st.id) return;
+      if (data.type === Hls.ErrorTypes.NETWORK_ERROR && retries++ < 2) hls.startLoad();
+      else if (data.type === Hls.ErrorTypes.MEDIA_ERROR && retries++ < 2) hls.recoverMediaError();
+      else streamError(st);
+    });
+  } else {
+    audio.src = st.url;
+    startAudio(st, allowNoCorsRetry);
+  }
+  render();
+}
+
+function startAudio(st, allowNoCorsRetry) {
+  audio.play().then(() => {
+    if (cur?.id !== st.id) return;
+    playing = true; failed.delete(st.id);
+    updatePlayIcon(); eqStart(); setStatus('Playing live'); mediaSession(st);
+    if ('mediaSession' in navigator) navigator.mediaSession.playbackState = 'playing';
+    render();
+  }).catch(err => {
+    if (err.name === 'AbortError' || cur?.id !== st.id) return;
+    if (allowNoCorsRetry && corsMode) {
+      corsMode = false;
+      audio.removeAttribute('crossorigin');
+      cur = null;
+      playStation(st, false);
+      return;
+    }
+    streamError(st);
+  });
+}
+
+function streamError(st) {
+  playing = false; failed.add(st.id);
+  updatePlayIcon(); eqStop(); setStatus('Stream offline. Try another, or hide it.');
+  toast(`${st.name} is offline right now`); render();
+}
+function togglePlay() {
+  if (!cur) { if (allStations.length) playStation(allStations[0]); return; }
+  if (!loaded) { playStation(cur); return; }
+  if (failed.has(cur.id)) { const s = cur; cur = null; playStation(s); return; }
+  if (audio.paused) {
+    setStatus('Connecting…');
+    if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
+    audio.play().then(() => {
+      playing = true; stallTicks = 0; updatePlayIcon(); eqStart(); setStatus('Playing live');
+      if ('mediaSession' in navigator) navigator.mediaSession.playbackState = 'playing';
+    }).catch(err => { if (err.name !== 'AbortError') streamError(cur); });
+  } else {
+    if (recorder && recorder.state === 'recording') recorder.stop();
+    audio.pause(); playing = false; updatePlayIcon(); eqStop(); setStatus('Paused');
+    if ('mediaSession' in navigator) navigator.mediaSession.playbackState = 'paused';
+  }
+}
+function updatePlayIcon() {
+  const svg = playing ? '<rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/>' : '<path d="M8 5v14l11-7z"/>';
+  $('playIcon').innerHTML = svg;
+  $('drivePlayIcon').innerHTML = svg;
+  $('drivePlayTxt').textContent = playing ? 'PAUSE' : 'PLAY';
+}
+function favBtnState() {
+  const on = cur && favs.includes(cur.id);
+  $('favBtn').classList.toggle('active', !!on);
+  $('favBtn').querySelector('svg').setAttribute('fill', on ? 'currentColor' : 'none');
+}
+function step(dir) {
+  const list = filtered(); if (!list.length) return;
+  const i = cur ? list.findIndex(s => s.id === cur.id) : -1;
+  const n = i < 0 ? (dir > 0 ? 0 : list.length - 1) : (i + dir + list.length) % list.length;
+  playStation(list[n]);
+}
+function closePlayer() {
+  if (recorder && recorder.state === 'recording') recorder.stop();
+  destroyHls(); audio.pause(); audio.removeAttribute('src'); audio.load();
+  playing = false; cur = null; loaded = false; updatePlayIcon(); eqStop();
+  $('lcdMode').textContent = 'READY';
+  $('pTitle').textContent = 'Select a station';
+  $('driveTitle').textContent = 'Select a station';
+  setStatus('Tap any station card to tune in');
+  if ('mediaSession' in navigator) navigator.mediaSession.playbackState = 'none';
+  render();
+}
+function mediaSession(st) {
+  if (!('mediaSession' in navigator)) return;
+  navigator.mediaSession.metadata = new MediaMetadata({ title: st.name, artist: 'Waveloom Malayalam', album: st.type });
+  const h = (a, f) => { try { navigator.mediaSession.setActionHandler(a, f); } catch {} };
+  h('play', togglePlay); h('pause', togglePlay); h('stop', closePlayer);
+  h('previoustrack', () => step(-1)); h('nexttrack', () => step(1));
+}
+
+audio.addEventListener('waiting', () => { if (playing) setStatus('Buffering…'); });
+audio.addEventListener('playing', () => { if (cur && !failed.has(cur.id)) setStatus('Playing live'); });
+audio.addEventListener('error', () => {
+  if (cur && !hls && audio.getAttribute('src')) {
+    if (corsMode) {
+      const st = cur; corsMode = false; audio.removeAttribute('crossorigin'); cur = null; playStation(st, false);
+    } else {
+      streamError(cur);
+    }
+  }
+});
+
+$('playBtn').onclick = togglePlay;
+$('favBtn').onclick = () => { if (cur) toggleFav(cur.id); };
+$('prevBtn').onclick = () => step(-1);
+$('nextBtn').onclick = () => step(1);
+
+/* ---------- Car / Driving Mode + Screen WakeLock ---------- */
+let wakeLock = null;
+async function manageWakeLock(active) {
+  try {
+    if (active && 'wakeLock' in navigator) {
+      wakeLock = await navigator.wakeLock.request('screen');
+      $('driveStatusBadge').textContent = '🚗 DRIVE MODE · SCREEN AWAKE';
+    } else if (wakeLock) {
+      await wakeLock.release();
+      wakeLock = null;
+    }
+  } catch {
+    $('driveStatusBadge').textContent = '🚗 DRIVE MODE · LIVE';
+  }
+}
+
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'visible' && !$('driveOverlay').hidden) {
+    manageWakeLock(true);
+  }
+});
+
+function toggleDriveMode(force) {
+  const show = typeof force === 'boolean' ? force : $('driveOverlay').hidden;
+  $('driveOverlay').hidden = !show;
+  manageWakeLock(show);
+  if (show) renderPresets();
+}
+$('driveBtn').onclick = () => toggleDriveMode(true);
+$('openDriveTopBtn').onclick = () => toggleDriveMode(true);
+$('exitDriveBtn').onclick = () => toggleDriveMode(false);
+$('drivePlayBtn').onclick = togglePlay;
+$('drivePrevBtn').onclick = () => step(-1);
+$('driveNextBtn').onclick = () => step(1);
+
+/* ---------- Native Android Hardware Back Button Handler ---------- */
+function handleAndroidBack() {
+  if (!$('driveOverlay').hidden) { toggleDriveMode(false); return true; }
+  if (!$('addModal').hidden) { closeAddModal(); return true; }
+  if (view !== 'stations') {
+    document.querySelector('.nav-tab[data-view="stations"]').click();
+    return true;
+  }
+  return false;
+}
+
+if (window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.App) {
+  window.Capacitor.Plugins.App.addListener('backButton', ({ canGoBack }) => {
+    if (!handleAndroidBack()) {
+      if (canGoBack) window.history.back();
+      else window.Capacitor.Plugins.App.exitApp();
+    }
+  });
+}
+
+const vol = $('vol');
+vol.value = store.get('waveloom_volume', 1); audio.volume = +vol.value;
+vol.oninput = () => { audio.volume = +vol.value; store.set('waveloom_volume', +vol.value); };
+
+/* Sleep timer */
+const SLEEP = [0, 15, 30, 60];
+let sleepIdx = 0, sleepEnd = 0, sleepTick = null;
+$('sleepBtn').onclick = () => {
+  sleepIdx = (sleepIdx + 1) % SLEEP.length;
+  clearInterval(sleepTick);
+  const btn = $('sleepBtn'), txt = $('sleepTxt');
+  if (!SLEEP[sleepIdx]) { btn.classList.remove('active'); txt.textContent = 'Sleep'; toast('Sleep timer off'); return; }
+  sleepEnd = Date.now() + SLEEP[sleepIdx] * 60000;
+  btn.classList.add('active'); toast(`Sleep timer: ${SLEEP[sleepIdx]} minutes`);
+  const tick = () => {
+    const left = sleepEnd - Date.now();
+    if (left <= 0) {
+      clearInterval(sleepTick); sleepIdx = 0; btn.classList.remove('active'); txt.textContent = 'Sleep';
+      if (cur && !audio.paused) { audio.pause(); playing = false; updatePlayIcon(); eqStop(); setStatus('Sleep timer ended'); }
+      return;
+    }
+    txt.textContent = Math.ceil(left / 60000) + 'm';
+  };
+  tick(); sleepTick = setInterval(tick, 1000);
+};
+
+/* ---------- Navigation, filters, search ---------- */
+document.querySelectorAll('.nav-tab').forEach(tab => tab.addEventListener('click', () => {
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  tab.classList.add('active'); view = tab.dataset.view;
+  const isSet = view === 'settings', isFav = view === 'favourites';
+  $('directory').style.display = isSet ? 'none' : 'block';
+  $('settings').classList.toggle('visible', isSet);
+  if (isSet) { extras(); return; }
+  $('viewHeading').innerHTML = isFav ? 'Favourites <span>പ്രിയപ്പെട്ടവ</span>' : 'Malayalam <span>മലയാളം</span>';
+  $('viewSub').textContent = isFav ? 'Your saved Malayalam radio stations.' : 'Akashvani, FM and online Malayalam stations. Tap a station to play.';
+  $('toolbar').style.display = isFav ? 'none' : 'flex';
+  $('presetsWrap').style.display = isFav ? 'none' : 'block';
+  render();
+}));
+document.querySelectorAll('.subtab').forEach(tab => tab.addEventListener('click', () => {
+  document.querySelectorAll('.subtab').forEach(t => t.classList.remove('active'));
+  tab.classList.add('active'); subFilter = tab.dataset.sub; render();
+}));
+$('sortBtn').onclick = e => { sortAsc = !sortAsc; e.currentTarget.textContent = sortAsc ? '⇅ A–Z' : '⇅ Z–A'; render(); };
+
+let searchTimer;
+$('searchInput').addEventListener('input', e => {
+  query = e.target.value.trim();
+  $('searchClear').style.display = query ? 'block' : 'none';
+  if (view === 'settings') document.querySelector('.nav-tab[data-view="stations"]').click();
+  clearTimeout(searchTimer); searchTimer = setTimeout(render, 120);
+});
+$('searchClear').onclick = () => { $('searchInput').value = ''; query = ''; $('searchClear').style.display = 'none'; render(); };
+
+/* ---------- Extras ---------- */
+const findStation = id => allStations.find(s => s.id === id);
+function greeting() {
+  const h = new Date().getHours();
+  if (h >= 5 && h < 11) return ['Good morning', 'Devotional'];
+  if (h >= 11 && h < 17) return ['Good afternoon', 'Akashvani'];
+  if (h >= 17 && h < 22) return ['Good evening', 'FM'];
+  return ['Late night', 'Online'];
+}
+function renderHome() {
+  const on = view === 'stations', [g, t] = greeting();
+  $('suggest').style.display = on ? 'block' : 'none';
+  $('suggest').innerHTML = !on ? '' : lang === 'ml' ? `${tr(g)}. <button class="link" data-suggest="${t}">${tr(t)}</button> കേട്ടുനോക്കൂ.` : `${g}. Try <button class="link" data-suggest="${t}">${t}</button> stations.`;
+  const rs = recents.map(findStation).filter(s => s && !hidden.includes(s.id));
+  $('recentWrap').hidden = !on || !rs.length;
+  $('recent').innerHTML = rs.map(s => `<button class="chip" data-play="${esc(s.id)}">▶ ${esc(s.name)}</button>`).join('');
+}
+function buildRegions() {
+  const c = {};
+  allStations.forEach(s => { if (s.state) c[s.state] = (c[s.state] || 0) + 1; });
+  const keys = Object.keys(c).sort((a, b) => c[b] - c[a]).slice(0, 25), sel = $('stateSel'), sig = keys.join('|') + lang;
+  if (sel.dataset.sig === sig) return;
+  sel.dataset.sig = sig;
+  sel.innerHTML = `<option value="">${tr('All regions')}</option>` + keys.map(k => `<option value="${esc(k)}"${k === region ? ' selected' : ''}>${esc(k)} (${c[k]})</option>`).join('');
+}
+function track(st) {
+  recents = [st.id, ...recents.filter(i => i !== st.id)].slice(0, 8);
+  store.set('waveloom_recent', recents); store.set('waveloom_last', st.id);
+}
+function showUI(st) {
+  $('lcdMode').textContent = st.type === 'Akashvani' ? 'AIR' : 'ON AIR';
+  $('pCat').textContent = `Malayalam · ${st.type}`; $('pTitle').textContent = st.name;
+  $('driveCat').textContent = `MALAYALAM · ${st.type.toUpperCase()}`; $('driveTitle').textContent = st.name;
+  favBtnState();
+}
+function resume() {
+  if (cur) return;
+  const m = location.hash.match(/station=([^&]+)/);
+  const st = findStation(m ? decodeURIComponent(m[1]) : store.get('waveloom_last', null));
+  if (!st || hidden.includes(st.id)) return;
+  cur = st; loaded = false; showUI(st);
+  setStatus(m ? 'Shared station. Tap play to listen.' : 'Tap play to resume.');
+  render();
+}
+function moveFav(id, d) {
+  const i = favs.indexOf(id), j = i + d;
+  if (i < 0 || j < 0 || j >= favs.length) return;
+  [favs[i], favs[j]] = [favs[j], favs[i]]; store.set('waveloom_favs_v2', favs); render();
+}
+const fmt = n => n >= 3600 ? (n / 3600).toFixed(1) + ' h' : Math.max(1, Math.round(n / 60)) + ' min';
+function extras() {
+  const top = Object.values(listen).sort((a, b) => b.sec - a.sec).slice(0, 5);
+  $('statsList').innerHTML = top.length ? top.map(v => `${esc(v.name)} · ${fmt(v.sec)}`).join('<br>') : tr('Nothing yet.');
+  const hs = hidden.map(findStation).filter(Boolean);
+  $('hiddenList').innerHTML = hs.length ? hs.map(x => `${esc(x.name)} <button class="link" data-unhide="${esc(x.id)}">Restore</button>`).join('<br>') : tr('None.');
+  $('customList').innerHTML = customStations.length
+    ? customStations.map(x => `<div class="custom-item"><span><strong>${esc(x.name)}</strong> (${esc(x.type)})</span><button class="link" data-del-custom="${esc(x.id)}" style="color:var(--red)">Delete</button></div>`).join('')
+    : '<span class="caption">No custom stations added yet.</span>';
+}
+setInterval(() => {
+  if (!playing || !cur) return;
+  const v = listen[cur.id] || (listen[cur.id] = { name: cur.name, sec: 0 });
+  v.sec += 10; store.set('waveloom_listen', listen);
+}, 10000);
+
+document.addEventListener('click', e => {
+  const sg = e.target.closest('[data-suggest]');
+  if (sg) { document.querySelector(`.subtab[data-sub="${sg.dataset.suggest}"]`).click(); return; }
+  const p = e.target.closest('[data-play]');
+  if (p) { const st = findStation(p.dataset.play); if (st) playStation(st); return; }
+  const u = e.target.closest('[data-unhide]');
+  if (u) { hidden = hidden.filter(i => i !== u.dataset.unhide); store.set('waveloom_hidden', hidden); extras(); render(); return; }
+  const dc = e.target.closest('[data-del-custom]');
+  if (dc) { removeCustomStation(dc.dataset.delCustom); }
+});
+$('stateSel').onchange = e => { region = e.target.value; render(); };
+$('surpriseBtn').onclick = () => {
+  const l = filtered().filter(s => !failed.has(s.id));
+  if (l.length) playStation(l[Math.floor(Math.random() * l.length)]); else toast('No stations to pick from');
+};
+$('shareBtn').onclick = async () => {
+  if (!cur) return;
+  const url = location.href.split('#')[0] + '#station=' + encodeURIComponent(cur.id);
+  try { if (navigator.share) await navigator.share({ title: cur.name, url }); else { await navigator.clipboard.writeText(url); toast('Link copied'); } } catch {}
+};
+$('hideBtn').onclick = () => {
+  if (!cur) return;
+  const name = cur.name; hidden.push(cur.id); store.set('waveloom_hidden', hidden);
+  closePlayer(); toast(`${name} hidden. Restore it from Themes.`);
+};
+$('exportBtn').onclick = async () => {
+  const blob = new Blob([JSON.stringify({ favs, hidden, customStations, presets }, null, 1)], { type: 'application/json' });
+  const shared = await shareOrDownloadFile(blob, 'waveloom-backup.json', 'application/json');
+  if (!shared) toast('Backup downloaded');
+};
+$('importBtn').onclick = () => $('importFile').click();
+$('importFile').onchange = async e => {
+  try {
+    const d = JSON.parse(await e.target.files[0].text()), ok = a => Array.isArray(a) ? [...new Set(a.filter(x => typeof x === 'string'))] : null;
+    if (ok(d.favs)) favs = ok(d.favs);
+    if (ok(d.hidden)) hidden = ok(d.hidden);
+    if (Array.isArray(d.presets) && d.presets.length === 5) {
+      presets = d.presets.map(x => typeof x === 'string' ? x : '');
+      store.set('waveloom_presets_v1', presets);
+    }
+    if (Array.isArray(d.customStations)) {
+      customStations = d.customStations.filter(x => x && x.name && x.url);
+      store.set('waveloom_custom_v1', customStations);
+      mergeFetched(allStations);
+    }
+    store.set('waveloom_favs_v2', favs); store.set('waveloom_hidden', hidden);
+    toast('Backup imported'); render(); extras();
+  } catch { toast('That file is not a Waveloom backup'); }
+  e.target.value = '';
+};
+$('alarmBtn').onclick = () => {
+  const b = $('alarmBtn'), v = $('alarmTime').value, note = $('alarmNote');
+  const reset = () => { delete b.dataset.on; b.textContent = tr('Set alarm'); note.textContent = ''; };
+  clearTimeout(alarmTimer);
+  if (b.dataset.on) { reset(); return; }
+  if (!v) { toast('Pick a time first'); return; }
+  const [h, m] = v.split(':').map(Number), t = new Date();
+  t.setHours(h, m, 0, 0); if (t <= new Date()) t.setDate(t.getDate() + 1);
+  alarmTimer = setTimeout(() => {
+    const st = cur || findStation(store.get('waveloom_last', null)) || allStations[0];
+    loaded = false; playStation(st); reset();
+  }, t - new Date());
+  b.dataset.on = 1; b.textContent = tr('Cancel alarm'); note.textContent = `Rings at ${v}. Keep this tab open.`;
+};
+addEventListener('offline', () => { wasPlaying = playing; $('offline').hidden = false; });
+addEventListener('online', () => {
+  $('offline').hidden = true;
+  if (wasPlaying && cur) { wasPlaying = false; failed.delete(cur.id); loaded = false; playStation(cur); }
+});
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') { closeAddModal(); toggleDriveMode(false); return; }
+  if (e.target.matches('input, select, textarea') || e.ctrlKey || e.metaKey || e.altKey) return;
+  if (['1','2','3','4','5'].includes(e.key)) { triggerPreset(+e.key - 1); }
+  else if (e.code === 'Space' && !e.target.closest('button, [role=button]')) { e.preventDefault(); togglePlay(); }
+  else if (e.key === 'ArrowRight') step(1);
+  else if (e.key === 'ArrowLeft') step(-1);
+  else if (e.key.toLowerCase() === 'm') { audio.muted = !audio.muted; toast(audio.muted ? 'Muted' : 'Unmuted'); }
+  else if (e.key.toLowerCase() === 'd') toggleDriveMode();
+});
+
+/* ---------- Language ---------- */
+const ML = {
+  'Stations':'സ്റ്റേഷനുകൾ','♥ Favourites':'♥ പ്രിയപ്പെട്ടവ','Themes & Studio':'തീമുകൾ & സ്റ്റുഡിയോ','Total stations':'ആകെ സ്റ്റേഷനുകൾ','Playable':'പ്ലേ ചെയ്യാവുന്നവ',
+  'Failed to play':'പ്ലേ ആകാത്തവ','Last updated':'അവസാനം പുതുക്കിയത്','Recently played':'അടുത്തിടെ കേട്ടവ','Quick Presets':'പെട്ടെന്ന് തിരഞ്ഞെടുക്കാൻ',
+  'All':'എല്ലാം','Akashvani':'ആകാശവാണി','Online':'ഓൺലൈൻ','Devotional':'ഭക്തി','Custom':'കസ്റ്റം','All regions':'എല്ലാ പ്രദേശങ്ങളും',
+  'Display mode':'ഡിസ്പ്ലേ മോഡ്','Light':'ലൈറ്റ്','Dark':'ഡാർക്ക്','Colour theme':'നിറ തീം','Alarm':'അലാറം','Set alarm':'അലാറം സെറ്റ് ചെയ്യുക',
+  'Cancel alarm':'അലാറം റദ്ദാക്കുക','Stream health':'സ്ട്രീം പരിശോധന','Check all streams':'എല്ലാ സ്ട്രീമുകളും പരിശോധിക്കുക','Stop':'നിർത്തുക',
+  'Import':'ഇംപോർട്ട്','Most listened':'ഏറ്റവും കൂടുതൽ കേട്ടത്','Hidden stations':'മറച്ച സ്റ്റേഷനുകൾ','Nothing yet.':'ഒന്നുമില്ല.','None.':'ഒന്നുമില്ല.',
+  'Akashvani, FM and online Malayalam stations. Tap a station to play.':'ആകാശവാണി, എഫ്എം, ഓൺലൈൻ മലയാളം സ്റ്റേഷനുകൾ. കേൾക്കാൻ ഒരു സ്റ്റേഷനിൽ തൊടുക.',
+  'You are offline. Playback resumes when you reconnect.':'നിങ്ങൾ ഓഫ്‌ലൈനാണ്. കണക്ഷൻ തിരിച്ചുവരുമ്പോൾ പ്ലേബാക്ക് തുടരും.',
+  'Playing live':'തത്സമയം കേൾക്കുന്നു','Paused':'നിർത്തി','Connecting…':'കണക്ട് ചെയ്യുന്നു…','Buffering…':'ബഫർ ചെയ്യുന്നു…','Tap play to resume.':'തുടരാൻ പ്ലേ അമർത്തുക.',
+  'Good morning':'സുപ്രഭാതം','Good afternoon':'ശുഭ മധ്യാഹ്നം','Good evening':'ശുഭ സായാഹ്നം','Late night':'രാത്രി'
+};
+let lang = store.get('waveloom_lang', 'en');
+const tr = k => lang === 'ml' && ML[k] ? ML[k] : k;
+const origText = new WeakMap();
+function applyLang() {
+  document.documentElement.lang = lang;
+  const w = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+  for (let n; (n = w.nextNode());) {
+    if (n.parentNode.closest('script,style')) continue;
+    if (!origText.has(n)) { const k = n.nodeValue.trim(); if (!ML[k]) continue; origText.set(n, [n.nodeValue, k]); }
+    const [o, k] = origText.get(n);
+    n.nodeValue = lang === 'ml' ? o.replace(k, ML[k]) : o;
+  }
+  $('searchInput').placeholder = lang === 'ml' ? 'സ്റ്റേഷൻ തിരയുക' : 'Search stations';
+  $('langBtn').textContent = lang === 'ml' ? '🌐 English' : '🌐 മലയാളം';
+  $('mobileLangBtn').textContent = lang === 'ml' ? 'EN' : 'മലയാളം';
+}
+const toggleLang = () => { lang = lang === 'ml' ? 'en' : 'ml'; store.set('waveloom_lang', lang); applyLang(); render(); extras(); };
+$('langBtn').onclick = toggleLang;
+$('mobileLangBtn').onclick = toggleLang;
+
+/* ---------- Stream health check ---------- */
+function probe(st) {
+  return new Promise(res => {
+    let done = false, h, a;
+    const end = ok => { if (done) return; done = true; clearTimeout(t); if (h) h.destroy(); if (a) { a.removeAttribute('src'); a.load(); } res(ok); };
+    const t = setTimeout(() => end(false), 7000);
+    if (/\.m3u8(\?|$)/.test(st.url) && window.Hls && Hls.isSupported()) {
+      h = new Hls();
+      h.on(Hls.Events.MANIFEST_PARSED, () => end(true));
+      h.on(Hls.Events.ERROR, (_, d) => { if (d.fatal) end(false); });
+      h.loadSource(st.url);
+    } else {
+      a = new Audio(); a.preload = 'metadata';
+      a.onloadedmetadata = a.oncanplay = () => end(true);
+      a.onerror = () => end(false);
+      a.src = st.url;
+    }
+  });
+}
+let checking = false;
+$('checkBtn').onclick = async () => {
+  if (checking) { checking = false; return; }
+  checking = true;
+  const b = $('checkBtn'), note = $('checkNote'), list = allStations.filter(s => !hidden.includes(s.id));
+  let i = 0, done = 0; b.textContent = tr('Stop');
+  const worker = async () => {
+    while (checking && i < list.length) {
+      const st = list[i++];
+      (await probe(st)) ? failed.delete(st.id) : failed.add(st.id);
+      note.textContent = `${++done}/${list.length}`;
+      if (done % 10 === 0) render();
+    }
+  };
+  await Promise.all(Array.from({ length: 6 }, worker));
+  checking = false; b.textContent = tr('Check all streams'); render();
+  toast(`Checked ${done} stations. Some streams block testing, so results are approximate.`);
+};
+
+/* ---------- Cast / AirPlay ---------- */
+$('castBtn').onclick = () => {
+  try {
+    const p = audio.remote ? audio.remote.prompt() : audio.webkitShowPlaybackTargetPicker();
+    if (p && p.catch) p.catch(() => toast('Casting is not available for this stream'));
+  } catch { toast('Casting is not available for this stream'); }
+};
+/* ---------- Native Android MediaSession, AudioFocus & Bluetooth ---------- */
+let btAutoPlay = store.get('waveloom_bt_autoplay', false);
+let pausedByCall = false;
+
+function updateBtBtn() {
+  const b = $('btAutoBtn');
+  if (!b) return;
+  b.textContent = btAutoPlay ? 'On' : 'Off';
+  b.classList.toggle('primary', btAutoPlay);
+}
+if ($('btAutoBtn')) {
+  $('btAutoBtn').onclick = () => {
+    btAutoPlay = !btAutoPlay;
+    store.set('waveloom_bt_autoplay', btAutoPlay);
+    updateBtBtn();
+    toast(`Bluetooth Auto-Play: ${btAutoPlay ? 'ON' : 'OFF'}`);
+  };
+  updateBtBtn();
+}
+
+// 1. Phone Call / Audio Focus Handler
+window.onNativeAudioFocus = state => {
+  if (state === 'pause' && playing && !audio.paused) {
+    pausedByCall = true;
+    audio.pause();
+    playing = false;
+    updatePlayIcon();
+    eqStop();
+    setStatus('Paused for call');
+    syncNativeMediaState('paused');
+  } else if (state === 'resume' && pausedByCall && cur) {
+    pausedByCall = false;
+    audio.play().then(() => {
+      playing = true;
+      updatePlayIcon();
+      eqStart();
+      setStatus('Playing live');
+      syncNativeMediaState('playing');
+    }).catch(() => {});
+  }
+};
+
+// 2. Car Bluetooth / Headset Handler
+window.onNativeBluetooth = state => {
+  if (state === 'disconnected' && playing && !audio.paused) {
+    audio.pause();
+    playing = false;
+    updatePlayIcon();
+    eqStop();
+    setStatus('Bluetooth disconnected');
+    syncNativeMediaState('paused');
+    toast('Paused (Audio device disconnected)');
+  } else if (state === 'connected' && btAutoPlay && !playing) {
+    const st = cur || findStation(store.get('waveloom_last', null)) || allStations[0];
+    if (st) {
+      loaded = false;
+      playStation(st);
+      toast(`Bluetooth connected · Playing ${st.name}`);
+    }
+  }
+};
+
+// 3. True Lock-Screen & Background Foreground Service (@capgo/capacitor-media-session)
+const NativeMedia = window.Capacitor?.Plugins?.MediaSession;
+function syncNativeMediaState(state) {
+  if (!NativeMedia) return;
+  NativeMedia.setPlaybackState({ playbackState: state }).catch(() => {});
+}
+
+const origMediaSession = mediaSession;
+mediaSession = function(st) {
+  origMediaSession(st);
+  if (!NativeMedia) return;
+  NativeMedia.setMetadata({
+    title: st.name,
+    artist: 'Waveloom Malayalam',
+    album: st.type,
+    artwork: [{ src: 'icon-512.png', sizes: '512x512', type: 'image/png' }]
+  }).catch(() => {});
+  syncNativeMediaState('playing');
+};
+
+if (NativeMedia) {
+  NativeMedia.setActionHandler({ action: 'play' }, () => togglePlay());
+  NativeMedia.setActionHandler({ action: 'pause' }, () => togglePlay());
+  NativeMedia.setActionHandler({ action: 'stop' }, () => closePlayer());
+  NativeMedia.setActionHandler({ action: 'previoustrack' }, () => step(-1));
+  NativeMedia.setActionHandler({ action: 'nexttrack' }, () => step(1));
+}
+/* ---------- 1. Live Time-Shift / Rewind Buffer (-15s & Seek) ---------- */
+const rew15Btn = $('rew15Btn'), goLiveBtn = $('goLiveBtn'), seekBar = $('seekBar'), bufferLabel = $('bufferLabel');
+
+setInterval(() => {
+  if (!playing || !cur || !audio.seekable || audio.seekable.length === 0) return;
+  const start = audio.seekable.start(0);
+  const end = audio.seekable.end(audio.seekable.length - 1);
+  const windowSec = Math.floor(end - start);
+
+  if (windowSec > 3) {
+    seekBar.min = Math.floor(start);
+    seekBar.max = Math.floor(end);
+    seekBar.value = Math.floor(audio.currentTime);
+    const behind = Math.max(0, Math.floor(end - audio.currentTime));
+    bufferLabel.textContent = behind > 3 ? `⏪ Delayed: -${behind}s` : `⏪ Buffer: ${Math.min(windowSec, 180)}s`;
+    goLiveBtn.style.display = behind > 4 ? 'inline-block' : 'none';
+  } else {
+    bufferLabel.textContent = '⏪ Live Stream (No seek)';
+    goLiveBtn.style.display = 'none';
+  }
+}, 1000);
+
+rew15Btn.onclick = () => {
+  if (!cur || !audio.seekable || audio.seekable.length === 0) {
+    toast('Rewind buffer not available for this stream');
+    return;
+  }
+  const start = audio.seekable.start(0);
+  const target = Math.max(start, audio.currentTime - 15);
+  if (audio.currentTime - target < 1) {
+    toast('Reached start of buffer');
+    return;
+  }
+  audio.currentTime = target;
+  toast('Rewound 15 seconds');
+};
+
+goLiveBtn.onclick = () => {
+  if (audio.seekable && audio.seekable.length > 0) {
+    audio.currentTime = audio.seekable.end(audio.seekable.length - 1);
+    goLiveBtn.style.display = 'none';
+    toast('Back to Live broadcast');
+  }
+};
+
+seekBar.oninput = () => {
+  audio.currentTime = +seekBar.value;
+};
+
+/* ---------- 2. Auto-Skip Ads / Silence Detector (With Toggle) ---------- */
+let adGuardEnabled = store.get('waveloom_adguard', false);
+let silenceSeconds = 0, adDetectedCount = 0, adFreqData = null;
+
+function updateAdGuardUI() {
+  const btn = $('adSkipBtn');
+  if (!btn) return;
+  btn.classList.toggle('active', adGuardEnabled);
+  $('adSkipTxt').textContent = adGuardEnabled ? 'Guard: ON' : 'Ad Guard';
+}
+if ($('adSkipBtn')) {
+  $('adSkipBtn').onclick = () => {
+    adGuardEnabled = !adGuardEnabled;
+    store.set('waveloom_adguard', adGuardEnabled);
+    silenceSeconds = 0;
+    adDetectedCount = 0;
+    updateAdGuardUI();
+    toast(`Auto-Skip Ads/Silence: ${adGuardEnabled ? 'ON' : 'OFF'}`);
+  };
+  updateAdGuardUI();
+}
+
+setInterval(() => {
+  if (!adGuardEnabled || !playing || !cur || audio.paused) {
+    silenceSeconds = 0;
+    return;
+  }
+  // Check ICY title keywords for ads
+  const nowTitle = ($('icyText')?.textContent || '').toLowerCase();
+  if (/\b(ad|ads|commercial|promo|sponsor|break)\b/.test(nowTitle)) {
+    toast('Ad break detected · Switching station…');
+    step(1);
+    return;
+  }
+  // Check audio silence / dead air via Web Audio AnalyserNode
+  if (analyser && corsMode) {
+    if (!adFreqData) adFreqData = new Uint8Array(analyser.frequencyBinCount);
+    analyser.getByteFrequencyData(adFreqData);
+    const avg = adFreqData.reduce((a, b) => a + b, 0) / adFreqData.length;
+    if (avg < 3) {
+      silenceSeconds++;
+      if (silenceSeconds >= 6) {
+        silenceSeconds = 0;
+        toast('Dead air / Silence detected · Skipping station…');
+        step(1);
+      }
+    } else {
+      silenceSeconds = 0;
+    }
+  }
+}, 1000);
+
+/* ---------- 3. Live Song & Program Title (ICY Metadata Fetcher) ---------- */
+let icyTimer = null;
+async function pollIcyMetadata(st) {
+  clearInterval(icyTimer);
+  $('icyMeta').style.display = 'none';
+  $('icyText').textContent = '';
+  if (!st || /\.m3u8(\?|$)/.test(st.url)) return;
+
+  const fetchMeta = async () => {
+    if (!playing || cur?.id !== st.id) return;
+    try {
+      const ctl = new AbortController();
+      setTimeout(() => ctl.abort(), 5000);
+      const res = await fetch(st.url, {
+        headers: { 'Icy-MetaData': '1' },
+        signal: ctl.signal
+      });
+      const metaint = parseInt(res.headers.get('icy-metaint') || '0', 10);
+      if (!metaint || !res.body) { ctl.abort(); return; }
+
+      const reader = res.body.getReader();
+      let received = 0, chunks = [];
+      while (received < metaint + 512) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        chunks.push(value);
+        received += value.length;
+      }
+      ctl.abort();
+
+      const buf = new Uint8Array(received);
+      let offset = 0;
+      for (const c of chunks) { buf.set(c, offset); offset += c.length; }
+
+      const metaLen = buf[metaint] * 16;
+      if (metaLen > 0 && buf.length >= metaint + 1 + metaLen) {
+        const metaStr = new TextDecoder().decode(buf.slice(metaint + 1, metaint + 1 + metaLen));
+        const match = metaStr.match(/StreamTitle='([^']*)'/);
+        if (match && match[1].trim()) {
+          const title = match[1].trim();
+          $('icyText').textContent = title;
+          $('icyMeta').style.display = 'block';
+          if (adGuardEnabled && /\b(ad|ads|commercial|promo|sponsor|break)\b/i.test(title)) {
+            toast('Commercial detected · Switching station…');
+            step(1);
+          }
+        }
+      }
+    } catch {}
+  };
+
+  fetchMeta();
+  icyTimer = setInterval(fetchMeta, 25000);
+}
+/* ---------- GitHub Releases Auto-Update Checker ---------- */
+const CURRENT_APP_VERSION = 'v1.0.0'; // ഓരോ പുതിയ APK ബിൽഡ് ചെയ്യുമ്പോഴും ഇത് മാറ്റുക (ഉദാ: v1.0.1)
+const GITHUB_REPO = 'midhunmalayil1998-debug/waveloom';
+
+async function checkAppUpdate(manual = false) {
+  try {
+    const res = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/releases/latest`);
+    if (!res.ok) { if (manual) toast('No releases found on GitHub'); return; }
+    const data = await res.json();
+    const latestVersion = data.tag_name; // ഉദാ: "v1.0.1"
+
+    if (latestVersion && latestVersion !== CURRENT_APP_VERSION) {
+      const apkAsset = (data.assets || []).find(a => a.name.endsWith('.apk'));
+      const downloadUrl = apkAsset ? apkAsset.browser_download_url : data.html_url;
+
+      if (confirm(`Waveloom ${latestVersion} is available!\n\n${data.body || 'New features & improvements.'}\n\nDownload update now?`)) {
+        window.open(downloadUrl, '_system');
+      }
+    } else if (manual) {
+      toast(`You are on the latest version (${CURRENT_APP_VERSION})`);
+    }
+  } catch {
+    if (manual) toast('Could not check for updates right now');
+  }
+}
+
+// ആപ്പ് തുറന്ന് 4 സെക്കൻഡിന് ശേഷം തനിയെ അപ്ഡേറ്റ് ചെക്ക് ചെയ്യാൻ
+setTimeout(() => checkAppUpdate(false), 4000);
+// Hook ICY poller & Android Widget updater into playStation
+const _origPlayStation = playStation;
+playStation = function(st, allowNoCorsRetry = true) {
+  _origPlayStation(st, allowNoCorsRetry);
+  pollIcyMetadata(st);
+  if (window.AndroidWidget && window.AndroidWidget.updateStation) {
+    window.AndroidWidget.updateStation(st.name, st.type);
+  }
+};
+
+// Handle commands coming from the Android Home Screen Widget
+window.handleWidgetCommand = cmd => {
+  if (cmd === 'toggle') togglePlay();
+  else if (cmd === 'next') step(1);
+  else if (cmd === 'prev') step(-1);
+};
+/* ---------- Boot ---------- */
+eqStop(); initThemeUI(); applyLang();
+if ('remote' in audio || audio.webkitShowPlaybackTargetPicker) $('castBtn').hidden = false;
+const dirLoad = loadDirectory(); resume(); dirLoad.then(resume);
+if (!navigator.onLine) $('offline').hidden = false;
+if ('serviceWorker' in navigator && location.protocol.startsWith('http')) navigator.serviceWorker.register('sw.js').catch(() => {});
+</script>
+</body>
+</html>
