@@ -60,7 +60,7 @@ button, input, select { font: inherit; color: inherit; }
   margin: 0 auto;
 }
 
-/* Left Sidebar */
+/* Left Sidebar (Desktop) */
 .sidebar {
   border-right: 1px solid var(--border);
   padding: 24px 18px;
@@ -278,7 +278,8 @@ button, input, select { font: inherit; color: inherit; }
 
 /* Filter Bar */
 .filter-bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 14px; }
-.subtabs { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 2px; }
+.subtabs { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 2px; max-width: 100%; }
+.subtabs::-webkit-scrollbar { display: none; }
 .subtab {
   background: var(--card);
   border: 1px solid var(--border);
@@ -289,6 +290,7 @@ button, input, select { font: inherit; color: inherit; }
   color: var(--muted);
   cursor: pointer;
   white-space: nowrap;
+  flex-shrink: 0;
 }
 .subtab:hover { color: var(--text); background: var(--hover); }
 .subtab.active { background: var(--text); color: var(--bg); border-color: var(--text); }
@@ -312,7 +314,7 @@ select.pill-btn { max-width: 165px; }
 .caption { font-size: .8rem; color: var(--muted); margin-bottom: 14px; }
 
 /* Station Cards Grid */
-.grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+.grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
 .cell {
   display: flex;
   align-items: center;
@@ -322,6 +324,7 @@ select.pill-btn { max-width: 165px; }
   border: 1px solid var(--border);
   border-radius: var(--radius);
   cursor: pointer;
+  min-width: 0;
   transition: transform .15s, border-color .15s, box-shadow .15s;
 }
 .cell:hover { transform: translateY(-2px); border-color: color-mix(in srgb, var(--accent) 45%, var(--border)); box-shadow: var(--shadow); }
@@ -360,7 +363,7 @@ select.pill-btn { max-width: 165px; }
 }
 .fav:hover { color: var(--accent); background: var(--hover); }
 .fav.on { color: var(--red); }
-.mv { display: flex; flex-direction: column; }
+.mv { display: flex; flex-direction: column; flex-shrink: 0; }
 .mv button { background: none; border: 0; color: var(--muted); cursor: pointer; font-size: .65rem; padding: 1px 5px; }
 .mv button:hover { color: var(--accent); }
 .empty { grid-column: 1 / -1; padding: 48px 20px; text-align: center; border: 1px dashed var(--border); border-radius: var(--radius); color: var(--muted); }
@@ -368,27 +371,27 @@ select.pill-btn { max-width: 165px; }
 /* Settings & Themes View */
 .settings { display: none; }
 .settings.visible { display: block; }
-.settings-card { background: var(--card-solid); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; margin-bottom: 18px; }
+.settings-card { background: var(--card-solid); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px; margin-bottom: 14px; }
 .mode { display: inline-flex; background: var(--card); border: 1px solid var(--border); border-radius: 11px; padding: 3px; }
 .mode button { padding: 7px 20px; background: transparent; border: 0; border-radius: 8px; cursor: pointer; font-size: .84rem; font-weight: 600; }
 .mode button.active { background: var(--accent); color: #fff; }
-.swatches { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; }
+.swatches { display: grid; grid-template-columns: repeat(auto-fill, minmax(125px, 1fr)); gap: 10px; }
 .swatch {
   cursor: pointer;
   text-align: left;
   background: var(--card);
   border: 1.5px solid var(--border);
   border-radius: 12px;
-  padding: 10px;
+  padding: 9px;
   transition: transform .15s, border-color .15s;
 }
 .swatch:hover { transform: translateY(-2px); }
 .swatch.active { border-color: var(--accent); background: var(--hl); }
-.swatch-bar { height: 36px; border-radius: 8px; display: flex; overflow: hidden; margin-bottom: 8px; border: 1px solid rgba(0,0,0,.08); }
+.swatch-bar { height: 32px; border-radius: 7px; display: flex; overflow: hidden; margin-bottom: 7px; border: 1px solid rgba(0,0,0,.08); }
 .swatch-bar span { flex: 1; }
-.swatch .n { font-size: .86rem; font-weight: 700; display: block; }
-.swatch .m { font-size: .76rem; color: var(--accent); display: block; }
-.swatch .e { font-size: .72rem; color: var(--muted); display: block; }
+.swatch .n { font-size: .84rem; font-weight: 700; display: block; }
+.swatch .m { font-size: .74rem; color: var(--accent); display: block; }
+.swatch .e { font-size: .7rem; color: var(--muted); display: block; }
 .row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
 
 .custom-item {
@@ -515,7 +518,7 @@ select.pill-btn { max-width: 165px; }
 }
 .vol-box input { flex: 1; accent-color: var(--console-accent); }
 
-.console-actions { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+.console-actions { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
 .dock {
   background: rgba(255,255,255,.06);
   border: 1px solid rgba(255,255,255,.08);
@@ -528,7 +531,7 @@ select.pill-btn { max-width: 165px; }
   align-items: center;
   justify-content: center;
   gap: 3px;
-  font-size: .68rem;
+  font-size: .66rem;
 }
 .dock:hover { color: var(--console-accent); background: rgba(255,255,255,.12); }
 .dock.active { color: var(--console-accent); border-color: var(--console-accent); }
@@ -543,7 +546,7 @@ select.pill-btn { max-width: 165px; }
   inset: 0;
   background: rgba(0,0,0,.65);
   backdrop-filter: blur(6px);
-  z-index: 600;
+  z-index: 650;
   display: grid;
   place-items: center;
   padding: 16px;
@@ -646,6 +649,61 @@ select.pill-btn { max-width: 165px; }
 .drive-btn:active { transform: scale(.96); }
 .drive-btn.main { background: var(--console-accent); color: #090D0B; border: 0; }
 
+/* Slide-Over Settings & Studio Drawer */
+.settings-drawer-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.55);
+  backdrop-filter: blur(4px);
+  z-index: 500;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .25s ease;
+}
+.settings-drawer-backdrop.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+.settings-drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: min(380px, 90vw);
+  background: var(--bg);
+  color: var(--text);
+  border-left: 1px solid var(--border);
+  z-index: 550;
+  transform: translateX(100%);
+  transition: transform .28s cubic-bezier(.2, .8, .2, 1);
+  display: flex;
+  flex-direction: column;
+  padding: calc(16px + env(safe-area-inset-top)) 16px calc(24px + env(safe-area-inset-bottom));
+  overflow-y: auto;
+  box-shadow: -12px 0 35px rgba(0,0,0,.35);
+}
+.settings-drawer.open {
+  transform: translateX(0);
+}
+.drawer-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 14px;
+  margin-bottom: 14px;
+  border-bottom: 1px solid var(--border);
+}
+.drawer-close {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: var(--card);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+}
+
 .toast {
   position: fixed;
   left: 50%;
@@ -659,68 +717,234 @@ select.pill-btn { max-width: 165px; }
   z-index: 800;
   box-shadow: var(--shadow);
   transition: transform .3s;
+  max-width: 90vw;
+  text-align: center;
 }
 .toast.show { transform: translate(-50%, 0); }
 
 .sk { height: 68px; cursor: default; background: linear-gradient(90deg, var(--card), var(--hover), var(--card)); background-size: 200% 100%; animation: sh 1.2s infinite; }
 @keyframes sh { to { background-position: -200% 0; } }
 
-/* Responsive Breakpoints */
-@media (max-width: 1120px) {
-  .app-shell { grid-template-columns: 220px 1fr; }
-  .console-pane {
-    position: fixed;
-    left: 220px;
-    right: 0;
-    bottom: 0;
-    top: auto;
-    height: auto;
-    border-left: 0;
-    border-top: 1px solid var(--border);
-    padding: 10px 16px;
-    background: var(--console);
-    z-index: 300;
-  }
-  .console-hint, .tuner-top, .vol-box, .eq-presets { display: none; }
-  .console-card { box-shadow: none; border: 0; padding: 0; display: flex; align-items: center; gap: 12px; border-radius: 0; }
-  .tuner-screen { margin: 0; padding: 8px; width: 64px; flex-shrink: 0; }
-  .eq { height: 28px; }
-  .now-meta { margin: 0; flex: 1; min-width: 0; }
-  .p-title { font-size: 1rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .transport { margin: 0; gap: 8px; }
-  .play-btn { width: 44px; height: 44px; }
-  .console-actions { display: flex; }
-  .dock { padding: 8px; }
-  .dock span { display: none; }
-}
+/* ---------- SPOTIFY / APPLE MUSIC MOBILE ARCHITECTURE (NO BOTTOM BAR) ---------- */
+.np-sheet-header, .np-collapse-btn, .mini-expand-hint { display: none; }
 
-@media (max-width: 760px) {
-  .app-shell { grid-template-columns: 1fr; }
-  .sidebar {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    top: auto;
-    height: 60px;
-    flex-direction: row;
-    padding: 4px 12px calc(4px + env(safe-area-inset-bottom));
-    border-right: 0;
-    border-top: 1px solid var(--border);
-    background: var(--bg);
-    z-index: 350;
+@media (max-width: 1120px) {
+  html, body {
+    max-width: 100vw !important;
+    overflow-x: hidden !important;
   }
-  .brand, .sidebar-footer { display: none; }
-  .nav-menu { flex-direction: row; width: 100%; margin: 0; justify-content: space-around; }
-  .nav-tab { flex: 1; justify-content: center; padding: 8px; font-size: .82rem; }
-  .mobile-brand { display: flex; }
+  .app-shell {
+    display: block !important;
+    width: 100% !important;
+    overflow-x: hidden !important;
+  }
+
+  /* Completely hide Bottom Navigation Bar */
+  .sidebar { display: none !important; }
+
+  /* Main Browse Screen */
+  .center-pane {
+    width: 100% !important;
+    max-width: 100vw !important;
+    padding: 12px 14px 96px !important;
+    overflow-x: hidden !important;
+  }
+  .mobile-brand {
+    display: flex !important;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6px;
+  }
   #mobileLangBtn { display: inline-flex !important; }
-  .center-pane { padding: 16px 16px 160px; }
-  .grid { grid-template-columns: 1fr; }
-  .presets-grid { grid-template-columns: repeat(2, 1fr); }
-  .presets-grid .preset-slot:last-child { grid-column: span 2; }
-  .console-pane { left: 0; bottom: calc(60px + env(safe-area-inset-bottom)); padding: 10px 14px; }
-  .t-btn { display: none; }
+  .top-search-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 14px;
+    width: 100%;
+  }
+  .search-wrap { width: 100% !important; min-width: 0 !important; max-width: 100% !important; flex: 1 1 100%; }
+  .quick-actions { display: flex; width: 100%; gap: 6px; }
+  .quick-actions .pill-btn { flex: 1; justify-content: center; padding: 7px 6px; font-size: .74rem; white-space: nowrap; }
+
+  .hero-header h1 { font-size: 1.5rem; }
+
+  /* Horizontal Scrollable Presets */
+  .presets-bar { padding: 10px; margin-bottom: 14px; }
+  .presets-grid {
+    display: flex !important;
+    overflow-x: auto !important;
+    gap: 8px !important;
+    padding-bottom: 2px;
+  }
+  .presets-grid::-webkit-scrollbar { display: none; }
+  .preset-slot {
+    flex: 0 0 140px !important;
+    height: 38px !important;
+    padding: 6px 10px !important;
+  }
+
+  /* Horizontal Filter Chips */
+  .chips {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    overflow-x: auto !important;
+    gap: 6px;
+    padding-bottom: 4px;
+    max-width: 100%;
+  }
+  .chips::-webkit-scrollbar { display: none; }
+  .chip { flex-shrink: 0; padding: 6px 12px; font-size: .78rem; }
+
+  /* Single Column Station List */
+  .grid { display: grid !important; grid-template-columns: minmax(0, 1fr) !important; gap: 8px !important; width: 100% !important; }
+  .cell { width: 100% !important; max-width: 100% !important; padding: 10px 12px !important; }
+
+  /* ---------- FLOATING MINI-PLAYER BAR AT VERY BOTTOM ---------- */
+  .console-pane:not(.expanded) {
+    position: fixed !important;
+    left: 10px !important;
+    right: 10px !important;
+    bottom: calc(10px + env(safe-area-inset-bottom)) !important;
+    top: auto !important;
+    width: auto !important;
+    height: 62px !important;
+    padding: 8px 12px !important;
+    border-radius: 16px !important;
+    border: 1px solid rgba(255,255,255,.14) !important;
+    background: var(--console) !important;
+    box-shadow: 0 10px 28px rgba(0,0,0,.45) !important;
+    z-index: 390 !important;
+    overflow: hidden !important;
+    cursor: pointer;
+    transition: all .25s ease;
+  }
+  .console-pane:not(.expanded) .console-hint,
+  .console-pane:not(.expanded) .tuner-top,
+  .console-pane:not(.expanded) .vol-box,
+  .console-pane:not(.expanded) .eq-presets,
+  .console-pane:not(.expanded) #timeshiftBox,
+  .console-pane:not(.expanded) .t-btn,
+  .console-pane:not(.expanded) .console-actions {
+    display: none !important;
+  }
+  .console-pane:not(.expanded) .console-card {
+    display: flex !important;
+    align-items: center !important;
+    gap: 10px !important;
+    width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    border: 0 !important;
+    box-shadow: none !important;
+    background: transparent !important;
+  }
+  .console-pane:not(.expanded) .tuner-screen {
+    width: 42px !important;
+    height: 42px !important;
+    padding: 5px !important;
+    margin: 0 !important;
+    flex-shrink: 0 !important;
+    border-radius: 10px !important;
+  }
+  .console-pane:not(.expanded) .eq { height: 28px !important; gap: 2px !important; }
+  .console-pane:not(.expanded) .now-meta {
+    flex: 1 1 auto !important;
+    min-width: 0 !important;
+    margin: 0 !important;
+    overflow: hidden !important;
+  }
+  .console-pane:not(.expanded) .p-cat { display: none !important; }
+  .console-pane:not(.expanded) .p-title {
+    font-size: .92rem !important;
+    margin: 0 !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }
+  .console-pane:not(.expanded) .p-status,
+  .console-pane:not(.expanded) #icyMeta {
+    font-size: .72rem !important;
+    margin: 2px 0 0 !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }
+  .console-pane:not(.expanded) .transport { margin: 0 !important; flex-shrink: 0 !important; gap: 8px !important; }
+  .console-pane:not(.expanded) .play-btn { width: 40px !important; height: 40px !important; flex-shrink: 0 !important; }
+  .console-pane:not(.expanded) .mini-expand-hint {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    color: #F8FAFC;
+    opacity: .75;
+    padding-left: 2px;
+  }
+
+  /* ---------- FULL-SCREEN NOW PLAYING SHEET (EXPANDED STATE) ---------- */
+  .console-pane.expanded {
+    position: fixed !important;
+    inset: 0 !important;
+    width: 100vw !important;
+    height: 100dvh !important;
+    max-width: 100vw !important;
+    padding: calc(16px + env(safe-area-inset-top)) 20px calc(24px + env(safe-area-inset-bottom)) !important;
+    background: var(--console) !important;
+    color: #F8FAFC !important;
+    z-index: 600 !important;
+    overflow-y: auto !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: space-between !important;
+  }
+  .console-pane.expanded .np-sheet-header {
+    display: flex !important;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+    color: #F8FAFC;
+  }
+  .console-pane.expanded .np-collapse-btn {
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    border: 0;
+    background: rgba(255,255,255,.12);
+    color: #F8FAFC;
+    cursor: pointer;
+  }
+  .console-pane.expanded .console-card {
+    box-shadow: none !important;
+    border: 0 !important;
+    padding: 0 !important;
+    background: transparent !important;
+  }
+  .console-pane.expanded .tuner-screen {
+    padding: 18px !important;
+    margin-bottom: 18px !important;
+    border-radius: 18px !important;
+  }
+  .console-pane.expanded .eq { height: 96px !important; }
+  .console-pane.expanded .p-title { font-size: 1.45rem !important; }
+  .console-pane.expanded .transport { margin: 18px 0 !important; gap: 22px !important; }
+  .console-pane.expanded .play-btn { width: 64px !important; height: 64px !important; }
+  .console-pane.expanded .t-btn { display: inline-flex !important; width: 46px !important; height: 46px !important; }
+  .console-pane.expanded .console-actions {
+    display: grid !important;
+    grid-template-columns: repeat(4, 1fr) !important;
+    gap: 8px !important;
+    margin-top: 14px !important;
+  }
+  .console-pane.expanded .dock {
+    padding: 10px 4px !important;
+    font-size: .72rem !important;
+  }
+  .console-pane.expanded .dock span { display: block !important; }
+  .console-pane.expanded .console-hint { display: none !important; }
 }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
 </style>
@@ -728,7 +952,7 @@ select.pill-btn { max-width: 165px; }
 <body>
 
 <div class="app-shell">
-  <!-- Left Navigation Rail -->
+  <!-- Left Navigation Rail (Desktop Only) -->
   <aside class="sidebar">
     <div>
       <div class="brand">
@@ -769,8 +993,14 @@ select.pill-btn { max-width: 165px; }
   <main class="center-pane">
     <div class="top-search-bar">
       <div class="mobile-brand">
-        <div class="brand-badge" style="width:32px;height:32px;font-size:1rem">W</div>
-        <strong style="font-family:'Space Grotesk',sans-serif">Waveloom</strong>
+        <div style="display:flex;align-items:center;gap:10px">
+          <div class="brand-badge" style="width:32px;height:32px;font-size:1rem">W</div>
+          <strong style="font-family:'Space Grotesk',sans-serif;font-size:1.1rem">Waveloom</strong>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <button class="pill-btn" id="mobileFavQuickBtn" aria-label="Favourites" style="padding:6px 10px">♥ <span id="mobileFavBadge">0</span></button>
+          <button class="pill-btn primary" id="openSettingsDrawerBtn" aria-label="Settings" style="padding:6px 12px">⚙️ Settings</button>
+        </div>
       </div>
       <div class="search-wrap">
         <svg class="search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
@@ -778,7 +1008,7 @@ select.pill-btn { max-width: 165px; }
         <button class="search-clear" id="searchClear" aria-label="Clear search">✕</button>
       </div>
       <div class="quick-actions">
-        <button class="pill-btn primary" id="openAddModalBtn">➕ Add Station</button>
+        <button class="pill-btn primary" id="openAddModalBtn">➕ Add</button>
         <button class="pill-btn" id="surpriseBtn">🎲 Surprise</button>
         <button class="pill-btn" id="openDriveTopBtn">🚗 Drive</button>
         <button class="pill-btn" id="mobileLangBtn" style="display:none">മലയാളം</button>
@@ -830,16 +1060,9 @@ select.pill-btn { max-width: 165px; }
     </section>
 
     <section class="settings" id="settings">
-      <div class="hero-header">
-        <div>
-          <h1>Studio & Appearance <span>തീമുകൾ</span></h1>
-          <p>Customise themes, audio presets, custom streams, and alarms.</p>
-        </div>
-      </div>
-
       <div class="settings-card">
         <div class="section-label">Display mode</div>
-        <div class="mode" style="margin-bottom:20px">
+        <div class="mode" style="margin-bottom:18px">
           <button id="lightBtn">Light</button>
           <button id="darkBtn">Dark</button>
         </div>
@@ -853,24 +1076,26 @@ select.pill-btn { max-width: 165px; }
         <div id="customList" style="margin-bottom:12px"></div>
         <button class="pill-btn primary" id="settingsAddBtn">➕ Add New Stream URL</button>
       </div>
+
       <div class="settings-card">
         <div class="section-label">Native Android Audio & Car Bluetooth</div>
         <div class="row" style="justify-content:space-between;margin-bottom:10px">
-          <span style="font-size:.88rem;font-weight:600">Auto-play when Car Bluetooth connects</span>
+          <span style="font-size:.86rem;font-weight:600">Auto-play on Car Bluetooth</span>
           <button class="pill-btn" id="btAutoBtn">Off</button>
         </div>
         <p class="caption" style="margin:0">Automatically pauses on phone calls or Bluetooth disconnect, and keeps playback alive on the lock screen.</p>
       </div>
+
       <div class="settings-card">
         <div class="section-label">Alarm</div>
-        <div class="row" style="margin-bottom:20px">
+        <div class="row" style="margin-bottom:18px">
           <input type="time" id="alarmTime" class="pill-btn" aria-label="Alarm time">
           <button class="pill-btn" id="alarmBtn">Set alarm</button>
           <span id="alarmNote" class="caption" style="margin:0"></span>
         </div>
 
         <div class="section-label">Stream health</div>
-        <div class="row" style="margin-bottom:20px">
+        <div class="row" style="margin-bottom:18px">
           <button class="pill-btn" id="checkBtn">Check all streams</button>
           <span id="checkNote" class="caption" style="margin:0"></span>
         </div>
@@ -882,25 +1107,36 @@ select.pill-btn { max-width: 165px; }
           <input type="file" id="importFile" accept="application/json" hidden>
         </div>
       </div>
+
       <div class="settings-card">
         <div class="section-label">App Updates & Version</div>
         <div class="row" style="justify-content:space-between;margin-bottom:8px">
-          <span style="font-size:.88rem;font-weight:600">Current Version: <strong id="appVerLabel" style="color:var(--accent)">v1.0.0</strong></span>
-          <button class="pill-btn primary" id="checkUpdateBtn">🔄 Check for Updates</button>
+          <span style="font-size:.86rem;font-weight:600">Version: <strong id="appVerLabel" style="color:var(--accent)">v1.0.2</strong></span>
+          <button class="pill-btn primary" id="checkUpdateBtn">🔄 Check Updates</button>
         </div>
         <p id="updateStatusNote" class="caption" style="margin:0">Checks GitHub Releases for newer APK versions.</p>
       </div>
+
       <div class="settings-card">
         <div class="section-label">Most listened</div>
-        <div id="statsList" class="caption" style="line-height:1.9;margin-bottom:16px">Nothing yet.</div>
+        <div id="statsList" class="caption" style="line-height:1.9;margin-bottom:14px">Nothing yet.</div>
         <div class="section-label">Hidden stations</div>
         <div id="hiddenList" class="caption" style="line-height:1.9;margin:0">None.</div>
       </div>
     </section>
   </main>
 
-  <!-- Right Broadcast Console -->
-  <aside class="console-pane" id="playerWrap" aria-label="Player">
+  <!-- Right Broadcast Console (Desktop Rail / Mobile Floating Mini-Player + Expandable Now-Playing Sheet) -->
+  <aside class="console-pane" id="consolePane" aria-label="Radio console">
+    <!-- Mobile Full-Screen Sheet Top Bar -->
+    <div class="np-sheet-header">
+      <button type="button" class="np-collapse-btn" id="npCollapseBtn" aria-label="Minimize Player">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+      </button>
+      <span style="font-size:.75rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;opacity:.8">Now Playing</span>
+      <span style="width:38px"></span>
+    </div>
+
     <div class="console-card">
       <div class="tuner-screen" id="lcd">
         <div class="tuner-top">
@@ -910,7 +1146,7 @@ select.pill-btn { max-width: 165px; }
         <div class="eq" id="eq"></div>
       </div>
 
-     <div class="now-meta">
+      <div class="now-meta">
         <div class="p-cat" id="pCat">Malayalam</div>
         <div class="p-title" id="pTitle">Select a station</div>
         <div class="p-status" id="pStatus" aria-live="polite">Tap any station card to tune in</div>
@@ -937,6 +1173,9 @@ select.pill-btn { max-width: 165px; }
         <button class="play-btn" id="playBtn" aria-label="Play or pause">
           <svg id="playIcon" width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
         </button>
+        <span class="mini-expand-hint" aria-hidden="true">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="18 15 12 9 6 15"/></svg>
+        </span>
         <button class="t-btn" id="nextBtn" aria-label="Next station">
           <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 4 15 12 5 20 5 4"/><line x1="19" y1="5" x2="19" y2="19"/></svg>
         </button>
@@ -1057,6 +1296,27 @@ select.pill-btn { max-width: 165px; }
     </div>
   </div>
 </div>
+
+<!-- Slide-Over Settings & Studio Drawer -->
+<div class="settings-drawer-backdrop" id="drawerBackdrop"></div>
+<aside class="settings-drawer" id="settingsDrawer" aria-label="Settings and Studio">
+  <div class="drawer-header">
+    <strong style="font-family:'Space Grotesk',sans-serif;font-size:1.15rem">⚙️ Settings & Studio</strong>
+    <button type="button" class="drawer-close" id="closeDrawerBtn" aria-label="Close Settings">✕</button>
+  </div>
+
+  <!-- Quick Library Switcher inside Drawer -->
+  <div class="settings-card" style="padding:12px;margin-bottom:14px">
+    <div class="section-label">Library View</div>
+    <div class="row" style="gap:8px">
+      <button class="pill-btn primary" id="drawerStationsBtn" style="flex:1;justify-content:center">📻 All Stations</button>
+      <button class="pill-btn" id="drawerFavsBtn" style="flex:1;justify-content:center">♥ Favourites (<span id="drawerFavCount">0</span>)</button>
+    </div>
+  </div>
+
+  <!-- Settings cards mount here on mobile -->
+  <div id="drawerSettingsMount"></div>
+</aside>
 
 <div class="toast" id="toast" role="status"></div>
 <audio id="audio" preload="none" crossorigin="anonymous" x-webkit-airplay="allow"></audio>
@@ -1196,7 +1456,7 @@ function bindPresetInteractions(container) {
 bindPresetInteractions($('presetsGrid'));
 bindPresetInteractions($('drivePresetsGrid'));
 
-/* ---------- Auto-Reconnect Stream Watchdog (For Driving / Weak Mobile Data) ---------- */
+/* ---------- Auto-Reconnect Stream Watchdog ---------- */
 let lastAudioTime = 0, stallTicks = 0;
 setInterval(() => {
   if (!playing || !cur || audio.paused || !navigator.onLine) {
@@ -1494,6 +1754,8 @@ function filtered() {
 function render() {
   buildRegions(); renderHome(); renderPresets();
   $('favCount').textContent = favs.length;
+  if ($('mobileFavBadge')) $('mobileFavBadge').textContent = favs.length;
+  if ($('drawerFavCount')) $('drawerFavCount').textContent = favs.length;
   $('navTotalCount').textContent = allStations.length;
   $('statTotal').textContent = allStations.length;
   $('statLive').textContent = Math.max(0, allStations.length - failed.size);
@@ -1749,19 +2011,89 @@ function toggleDriveMode(force) {
   manageWakeLock(show);
   if (show) renderPresets();
 }
-$('driveBtn').onclick = () => toggleDriveMode(true);
+$('driveBtn').onclick = () => { $('consolePane').classList.remove('expanded'); toggleDriveMode(true); };
 $('openDriveTopBtn').onclick = () => toggleDriveMode(true);
 $('exitDriveBtn').onclick = () => toggleDriveMode(false);
 $('drivePlayBtn').onclick = togglePlay;
 $('drivePrevBtn').onclick = () => step(-1);
 $('driveNextBtn').onclick = () => step(1);
 
+/* ---------- Spotify / Apple Music Now-Playing Sheet Toggle ---------- */
+const consolePane = $('consolePane');
+const npCollapseBtn = $('npCollapseBtn');
+
+if (consolePane) {
+  consolePane.addEventListener('click', e => {
+    if (window.innerWidth > 1120) return;
+    if (consolePane.classList.contains('expanded')) return;
+    if (e.target.closest('#playBtn')) return;
+    consolePane.classList.add('expanded');
+  });
+}
+
+if (npCollapseBtn) {
+  npCollapseBtn.addEventListener('click', e => {
+    e.stopPropagation();
+    consolePane.classList.remove('expanded');
+  });
+}
+
+/* ---------- Slide-Over Settings & Studio Drawer ---------- */
+const settingsDrawer = $('settingsDrawer');
+const drawerBackdrop = $('drawerBackdrop');
+const settingsSection = $('settings');
+const drawerMount = $('drawerSettingsMount');
+
+function openSettingsDrawer() {
+  if (settingsSection && drawerMount && settingsSection.parentElement !== drawerMount) {
+    drawerMount.appendChild(settingsSection);
+  }
+  settingsSection.classList.add('visible');
+  settingsSection.style.display = 'block';
+  extras();
+  settingsDrawer.classList.add('open');
+  drawerBackdrop.classList.add('open');
+}
+
+function closeSettingsDrawer() {
+  settingsDrawer.classList.remove('open');
+  drawerBackdrop.classList.remove('open');
+}
+
+if ($('openSettingsDrawerBtn')) $('openSettingsDrawerBtn').onclick = openSettingsDrawer;
+if ($('closeDrawerBtn')) $('closeDrawerBtn').onclick = closeSettingsDrawer;
+if (drawerBackdrop) drawerBackdrop.onclick = closeSettingsDrawer;
+
+function switchLibraryView(targetView) {
+  view = targetView;
+  const isFav = view === 'favourites';
+  $('directory').style.display = 'block';
+  $('viewHeading').innerHTML = isFav ? 'Favourites <span>പ്രിയപ്പെട്ടവ</span>' : 'Malayalam <span>മലയാളം</span>';
+  $('viewSub').textContent = isFav ? 'Your saved Malayalam radio stations.' : 'Akashvani, FM and online Malayalam stations. Tap a station to play.';
+  $('toolbar').style.display = isFav ? 'none' : 'flex';
+  $('presetsWrap').style.display = isFav ? 'none' : 'block';
+  $('drawerStationsBtn')?.classList.toggle('primary', !isFav);
+  $('drawerFavsBtn')?.classList.toggle('primary', isFav);
+  $('mobileFavQuickBtn')?.classList.toggle('primary', isFav);
+  render();
+  closeSettingsDrawer();
+}
+
+if ($('drawerStationsBtn')) $('drawerStationsBtn').onclick = () => switchLibraryView('stations');
+if ($('drawerFavsBtn')) $('drawerFavsBtn').onclick = () => switchLibraryView('favourites');
+if ($('mobileFavQuickBtn')) {
+  $('mobileFavQuickBtn').onclick = () => switchLibraryView(view === 'favourites' ? 'stations' : 'favourites');
+}
+
 /* ---------- Native Android Hardware Back Button Handler ---------- */
 function handleAndroidBack() {
   if (!$('driveOverlay').hidden) { toggleDriveMode(false); return true; }
+  if (consolePane && consolePane.classList.contains('expanded')) { consolePane.classList.remove('expanded'); return true; }
   if (!$('addModal').hidden) { closeAddModal(); return true; }
+  if (settingsDrawer && settingsDrawer.classList.contains('open')) { closeSettingsDrawer(); return true; }
   if (view !== 'stations') {
-    document.querySelector('.nav-tab[data-view="stations"]').click();
+    switchLibraryView('stations');
+    document.querySelector('.nav-tab[data-view="stations"]')?.click();
     return true;
   }
   return false;
@@ -1802,7 +2134,7 @@ $('sleepBtn').onclick = () => {
   tick(); sleepTick = setInterval(tick, 1000);
 };
 
-/* ---------- Navigation, filters, search ---------- */
+/* ---------- Desktop Sidebar Navigation, filters, search ---------- */
 document.querySelectorAll('.nav-tab').forEach(tab => tab.addEventListener('click', () => {
   document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
   tab.classList.add('active'); view = tab.dataset.view;
@@ -1919,7 +2251,7 @@ $('shareBtn').onclick = async () => {
 $('hideBtn').onclick = () => {
   if (!cur) return;
   const name = cur.name; hidden.push(cur.id); store.set('waveloom_hidden', hidden);
-  closePlayer(); toast(`${name} hidden. Restore it from Themes.`);
+  closePlayer(); toast(`${name} hidden. Restore it from Settings.`);
 };
 $('exportBtn').onclick = async () => {
   const blob = new Blob([JSON.stringify({ favs, hidden, customStations, presets }, null, 1)], { type: 'application/json' });
@@ -1958,7 +2290,7 @@ $('alarmBtn').onclick = () => {
     const st = cur || findStation(store.get('waveloom_last', null)) || allStations[0];
     loaded = false; playStation(st); reset();
   }, t - new Date());
-  b.dataset.on = 1; b.textContent = tr('Cancel alarm'); note.textContent = `Rings at ${v}. Keep this tab open.`;
+  b.dataset.on = 1; b.textContent = tr('Cancel alarm'); note.textContent = `Rings at ${v}. Keep app open.`;
 };
 addEventListener('offline', () => { wasPlaying = playing; $('offline').hidden = false; });
 addEventListener('online', () => {
@@ -1966,7 +2298,7 @@ addEventListener('online', () => {
   if (wasPlaying && cur) { wasPlaying = false; failed.delete(cur.id); loaded = false; playStation(cur); }
 });
 document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') { closeAddModal(); toggleDriveMode(false); return; }
+  if (e.key === 'Escape') { closeAddModal(); toggleDriveMode(false); consolePane?.classList.remove('expanded'); closeSettingsDrawer(); return; }
   if (e.target.matches('input, select, textarea') || e.ctrlKey || e.metaKey || e.altKey) return;
   if (['1','2','3','4','5'].includes(e.key)) { triggerPreset(+e.key - 1); }
   else if (e.code === 'Space' && !e.target.closest('button, [role=button]')) { e.preventDefault(); togglePlay(); }
@@ -2054,6 +2386,7 @@ $('castBtn').onclick = () => {
     if (p && p.catch) p.catch(() => toast('Casting is not available for this stream'));
   } catch { toast('Casting is not available for this stream'); }
 };
+
 /* ---------- Native Android MediaSession, AudioFocus & Bluetooth ---------- */
 let btAutoPlay = store.get('waveloom_bt_autoplay', false);
 let pausedByCall = false;
@@ -2074,7 +2407,6 @@ if ($('btAutoBtn')) {
   updateBtBtn();
 }
 
-// 1. Phone Call / Audio Focus Handler
 window.onNativeAudioFocus = state => {
   if (state === 'pause' && playing && !audio.paused) {
     pausedByCall = true;
@@ -2096,7 +2428,6 @@ window.onNativeAudioFocus = state => {
   }
 };
 
-// 2. Car Bluetooth / Headset Handler
 window.onNativeBluetooth = state => {
   if (state === 'disconnected' && playing && !audio.paused) {
     audio.pause();
@@ -2116,7 +2447,6 @@ window.onNativeBluetooth = state => {
   }
 };
 
-// 3. True Lock-Screen & Background Foreground Service (@capgo/capacitor-media-session)
 const NativeMedia = window.Capacitor?.Plugins?.MediaSession;
 function syncNativeMediaState(state) {
   if (!NativeMedia) return;
@@ -2143,6 +2473,7 @@ if (NativeMedia) {
   NativeMedia.setActionHandler({ action: 'previoustrack' }, () => step(-1));
   NativeMedia.setActionHandler({ action: 'nexttrack' }, () => step(1));
 }
+
 /* ---------- 1. Live Time-Shift / Rewind Buffer (-15s & Seek) ---------- */
 const rew15Btn = $('rew15Btn'), goLiveBtn = $('goLiveBtn'), seekBar = $('seekBar'), bufferLabel = $('bufferLabel');
 
@@ -2194,7 +2525,7 @@ seekBar.oninput = () => {
 
 /* ---------- 2. Auto-Skip Ads / Silence Detector (With Toggle) ---------- */
 let adGuardEnabled = store.get('waveloom_adguard', false);
-let silenceSeconds = 0, adDetectedCount = 0, adFreqData = null;
+let silenceSeconds = 0, adFreqData = null;
 
 function updateAdGuardUI() {
   const btn = $('adSkipBtn');
@@ -2207,7 +2538,6 @@ if ($('adSkipBtn')) {
     adGuardEnabled = !adGuardEnabled;
     store.set('waveloom_adguard', adGuardEnabled);
     silenceSeconds = 0;
-    adDetectedCount = 0;
     updateAdGuardUI();
     toast(`Auto-Skip Ads/Silence: ${adGuardEnabled ? 'ON' : 'OFF'}`);
   };
@@ -2219,14 +2549,12 @@ setInterval(() => {
     silenceSeconds = 0;
     return;
   }
-  // Check ICY title keywords for ads
   const nowTitle = ($('icyText')?.textContent || '').toLowerCase();
   if (/\b(ad|ads|commercial|promo|sponsor|break)\b/.test(nowTitle)) {
     toast('Ad break detected · Switching station…');
     step(1);
     return;
   }
-  // Check audio silence / dead air via Web Audio AnalyserNode
   if (analyser && corsMode) {
     if (!adFreqData) adFreqData = new Uint8Array(analyser.frequencyBinCount);
     analyser.getByteFrequencyData(adFreqData);
@@ -2298,34 +2626,69 @@ async function pollIcyMetadata(st) {
   fetchMeta();
   icyTimer = setInterval(fetchMeta, 25000);
 }
+
 /* ---------- GitHub Releases Auto-Update Checker ---------- */
-const CURRENT_APP_VERSION = 'v1.0.0'; // ഓരോ പുതിയ APK ബിൽഡ് ചെയ്യുമ്പോഴും ഇത് മാറ്റുക (ഉദാ: v1.0.1)
+const CURRENT_APP_VERSION = 'v1.0.2';
 const GITHUB_REPO = 'midhunmalayil1998-debug/waveloom';
 
-async function checkAppUpdate(manual = false) {
-  try {
-    const res = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/releases/latest`);
-    if (!res.ok) { if (manual) toast('No releases found on GitHub'); return; }
-    const data = await res.json();
-    const latestVersion = data.tag_name; // ഉദാ: "v1.0.1"
+if ($('appVerLabel')) $('appVerLabel').textContent = CURRENT_APP_VERSION;
 
-    if (latestVersion && latestVersion !== CURRENT_APP_VERSION) {
-      const apkAsset = (data.assets || []).find(a => a.name.endsWith('.apk'));
+function isNewerVersion(latest, current) {
+  const a = latest.replace(/^v/i, '').split('.').map(Number);
+  const b = current.replace(/^v/i, '').split('.').map(Number);
+  for (let i = 0; i < Math.max(a.length, b.length); i++) {
+    const x = a[i] || 0, y = b[i] || 0;
+    if (x > y) return true;
+    if (x < y) return false;
+  }
+  return false;
+}
+
+async function checkAppUpdate(manual = false) {
+  const note = $('updateStatusNote');
+  const btn = $('checkUpdateBtn');
+  if (manual && btn) { btn.disabled = true; btn.textContent = 'Checking…'; }
+  if (manual && note) note.textContent = 'Contacting GitHub…';
+
+  try {
+    const res = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/releases/latest`, {
+      headers: { 'Accept': 'application/vnd.github+json' }
+    });
+    if (!res.ok) {
+      if (manual) {
+        toast('No releases published yet');
+        if (note) note.textContent = 'No releases found on GitHub yet.';
+      }
+      return;
+    }
+    const data = await res.json();
+    const latestVersion = (data.tag_name || '').trim();
+
+    if (latestVersion && isNewerVersion(latestVersion, CURRENT_APP_VERSION)) {
+      const apkAsset = (data.assets || []).find(a => a.name.toLowerCase().endsWith('.apk'));
       const downloadUrl = apkAsset ? apkAsset.browser_download_url : data.html_url;
+      if (note) note.innerHTML = `New update <strong>${esc(latestVersion)}</strong> available! <a href="${esc(downloadUrl)}" target="_blank" class="link">Download APK</a>`;
 
       if (confirm(`Waveloom ${latestVersion} is available!\n\n${data.body || 'New features & improvements.'}\n\nDownload update now?`)) {
         window.open(downloadUrl, '_system');
       }
     } else if (manual) {
       toast(`You are on the latest version (${CURRENT_APP_VERSION})`);
+      if (note) note.textContent = `Up to date (${CURRENT_APP_VERSION}).`;
     }
   } catch {
-    if (manual) toast('Could not check for updates right now');
+    if (manual) {
+      toast('Could not check for updates right now');
+      if (note) note.textContent = 'Offline or GitHub unreachable.';
+    }
+  } finally {
+    if (manual && btn) { btn.disabled = false; btn.textContent = '🔄 Check Updates'; }
   }
 }
 
-// ആപ്പ് തുറന്ന് 4 സെക്കൻഡിന് ശേഷം തനിയെ അപ്ഡേറ്റ് ചെക്ക് ചെയ്യാൻ
-setTimeout(() => checkAppUpdate(false), 4000);
+if ($('checkUpdateBtn')) $('checkUpdateBtn').onclick = () => checkAppUpdate(true);
+setTimeout(() => { if (navigator.onLine) checkAppUpdate(false); }, 4500);
+
 // Hook ICY poller & Android Widget updater into playStation
 const _origPlayStation = playStation;
 playStation = function(st, allowNoCorsRetry = true) {
@@ -2342,6 +2705,7 @@ window.handleWidgetCommand = cmd => {
   else if (cmd === 'next') step(1);
   else if (cmd === 'prev') step(-1);
 };
+
 /* ---------- Boot ---------- */
 eqStop(); initThemeUI(); applyLang();
 if ('remote' in audio || audio.webkitShowPlaybackTargetPicker) $('castBtn').hidden = false;
