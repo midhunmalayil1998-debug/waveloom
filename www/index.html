@@ -735,6 +735,51 @@ select.pill-btn { max-width: 165px; }
 
 .console-hint { font-size: .76rem; color: var(--muted); text-align: center; padding: 10px; border: 1px dashed var(--border); border-radius: 12px; margin-top: 12px; }
 
+/* Live Listener Counter & Waveloom Wrapped */
+.live-listeners-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: .7rem;
+  font-weight: 700;
+  color: #6EE7B7;
+  background: rgba(110, 231, 183, .14);
+  border: 1px solid rgba(110, 231, 183, .28);
+  padding: 2px 9px;
+  border-radius: 999px;
+}
+.live-listeners-badge .pulse-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #4ADE80;
+  animation: blink 1.2s infinite;
+}
+.wrapped-card {
+  background: linear-gradient(135deg, #0F291E 0%, #1E6B4B 55%, #0B1913 100%);
+  color: #fff;
+  border-radius: 20px;
+  padding: 20px;
+  border: 1px solid rgba(255,255,255,.18);
+  box-shadow: 0 18px 36px rgba(0,0,0,.35);
+  position: relative;
+  overflow: hidden;
+}
+.wrapped-stat-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  margin: 14px 0;
+}
+.wrapped-stat {
+  background: rgba(255,255,255,.1);
+  backdrop-filter: blur(10px);
+  padding: 10px 12px;
+  border-radius: 12px;
+}
+.wrapped-stat small { display: block; font-size: .68rem; opacity: .75; text-transform: uppercase; letter-spacing: .05em; }
+.wrapped-stat strong { font-family: 'Space Grotesk', sans-serif; font-size: 1.15rem; color: #6EE7B7; }
+
 /* Modals */
 .modal-backdrop {
   position: fixed;
@@ -1024,6 +1069,7 @@ select.pill-btn { max-width: 165px; }
   .console-pane:not(.expanded) .vol-box,
   .console-pane:not(.expanded) .eq-presets,
   .console-pane:not(.expanded) #timeshiftBox,
+  .console-pane:not(.expanded) #communityRow,
   .console-pane:not(.expanded) .t-btn,
   .console-pane:not(.expanded) .console-actions {
     display: none !important;
@@ -1326,7 +1372,7 @@ select.pill-btn { max-width: 165px; }
       <div class="settings-card">
         <div class="section-label">App Updates & Version</div>
         <div class="row" style="justify-content:space-between;margin-bottom:8px">
-          <span style="font-size:.86rem;font-weight:600">Version: <strong id="appVerLabel" style="color:var(--accent)">v1.2.0</strong></span>
+          <span style="font-size:.86rem;font-weight:600">Version: <strong id="appVerLabel" style="color:var(--accent)">v1.3.0</strong></span>
           <button class="pill-btn primary" id="checkUpdateBtn">🔄 Check Updates</button>
         </div>
         <p id="updateStatusNote" class="caption" style="margin:0">Checks GitHub Releases for newer APK versions.</p>
@@ -1397,6 +1443,15 @@ select.pill-btn { max-width: 165px; }
         <div class="p-title" id="pTitle">Select a station</div>
         <div class="p-status" id="pStatus" aria-live="polite">Tap any station card to tune in</div>
         <div id="icyMeta" style="font-size:.78rem;color:var(--console-accent);margin-top:4px;font-weight:600;display:none">🎵 <span id="icyText"></span></div>
+
+        <!-- Live Listener Counter & Community Stream Fix -->
+        <div id="communityRow" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:7px">
+          <span class="live-listeners-badge" id="liveCountBadge" hidden>
+            <span class="pulse-dot"></span>
+            <span id="liveCountTxt">1 listening live</span>
+          </span>
+          <button type="button" id="reportStreamBtn" style="background:rgba(248,113,113,.16);border:1px solid rgba(248,113,113,.35);color:#FCA5A5;font-size:.68rem;font-weight:700;padding:2px 8px;border-radius:999px;cursor:pointer">⚠️ Report Offline / Fix URL</button>
+        </div>
       </div>
 
       <!-- Live Time-Shift / Rewind Buffer Controls -->
@@ -1485,6 +1540,66 @@ select.pill-btn { max-width: 165px; }
   </aside>
 </div>
 
+<!-- Waveloom Wrapped Modal -->
+<div class="modal-backdrop" id="wrappedModal" hidden>
+  <div class="modal-box" style="max-width:400px;padding:18px">
+    <div class="wrapped-card" id="wrappedPreview">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <span style="font-size:.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#6EE7B7">WAVELOOM WRAPPED</span>
+        <span style="font-size:.72rem;opacity:.8" id="wrapMonthLabel">2026</span>
+      </div>
+      <h3 style="font-family:'Space Grotesk',sans-serif;font-size:1.35rem;margin:6px 0 2px;color:#fff" id="wrapTopStation">No Data Yet</h3>
+      <p style="font-size:.78rem;opacity:.8;margin:0" id="wrapTopSub">Start listening to build your stats</p>
+
+      <div class="wrapped-stat-grid">
+        <div class="wrapped-stat">
+          <small>Total Played</small>
+          <strong id="wrapTotalHours">0.0 hrs</strong>
+        </div>
+        <div class="wrapped-stat">
+          <small>Peak Time</small>
+          <strong id="wrapPeakTime">—</strong>
+        </div>
+        <div class="wrapped-stat">
+          <small>Stations Tuned</small>
+          <strong id="wrapStationCount">0</strong>
+        </div>
+        <div class="wrapped-stat">
+          <small>Listener Vibe</small>
+          <strong id="wrapVibe">FM Explorer</strong>
+        </div>
+      </div>
+      <div style="font-size:.68rem;opacity:.65;text-align:right">waveloom.radio · Malayalam Studio</div>
+    </div>
+
+    <div class="row" style="justify-content:space-between;margin-top:14px">
+      <button type="button" class="pill-btn" id="closeWrappedBtn">Close</button>
+      <button type="button" class="pill-btn primary" id="shareWrappedImgBtn">📤 Share Story Card</button>
+    </div>
+  </div>
+</div>
+
+<!-- Crowd-Sourced Stream Report / Fix Modal -->
+<div class="modal-backdrop" id="reportModal" hidden>
+  <div class="modal-box">
+    <h3>Community Stream Fix</h3>
+    <p class="caption" id="reportStationTitle" style="margin-bottom:12px">Station Name</p>
+    <div style="margin-bottom:14px">
+      <button type="button" class="pill-btn" id="confirmOfflineBtn" style="width:100%;justify-content:center;border-color:var(--red);color:var(--red)">🚫 Report This Stream as Offline</button>
+    </div>
+    <form id="submitFixUrlForm">
+      <div class="field">
+        <label for="fixStreamUrl">Or paste a working stream URL (.m3u8 / .mp3) for everyone:</label>
+        <input type="url" id="fixStreamUrl" placeholder="https://new-working-stream.m3u8" required>
+      </div>
+      <div class="row" style="justify-content:flex-end;margin-top:14px">
+        <button type="button" class="pill-btn" id="cancelReportBtn">Cancel</button>
+        <button type="submit" class="pill-btn primary">Update for All Users</button>
+      </div>
+    </form>
+  </div>
+</div>
+
 <!-- Add Custom Station Modal -->
 <div class="modal-backdrop" id="addModal" hidden>
   <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="addModalTitle">
@@ -1560,6 +1675,17 @@ select.pill-btn { max-width: 165px; }
     <div class="row" style="gap:8px">
       <button class="pill-btn primary" id="drawerStationsBtn" style="flex:1;justify-content:center">📻 All Stations</button>
       <button class="pill-btn" id="drawerFavsBtn" style="flex:1;justify-content:center">♥ Favourites (<span id="drawerFavCount">0</span>)</button>
+    </div>
+  </div>
+
+  <!-- Waveloom Wrapped Card Trigger -->
+  <div class="settings-card" style="padding:12px;margin-bottom:14px;background:linear-gradient(135deg, var(--hl), var(--card-solid))">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <div>
+        <strong style="font-size:.92rem;display:block">✨ Waveloom Wrapped</strong>
+        <span class="caption" style="margin:0">Total played hours & shareable card</span>
+      </div>
+      <button class="pill-btn primary" id="openWrappedBtn">View Card</button>
     </div>
   </div>
 
@@ -1667,13 +1793,11 @@ if ($('retroSlider')) {
     retroSnapTimer = setTimeout(() => {
       const list = allStations.filter(s => !hidden.includes(s.id));
       if (!list.length) return;
-      // Check if any station explicitly matches this FM frequency
       const exact = list.find(s => (s.name + ' ' + s.detail).includes(freqStr));
       if (exact) {
         playStation(exact);
         return;
       }
-      // Otherwise map dial position proportionally across available stations
       const ratio = (val - 880) / 200;
       const targetIdx = Math.min(list.length - 1, Math.max(0, Math.round(ratio * (list.length - 1))));
       if (list[targetIdx] && (!cur || cur.id !== list[targetIdx].id)) {
@@ -2044,6 +2168,7 @@ function mergeFetched(list) {
     names.add(k); urls.add(s.url); return true;
   });
   allStations = [...base, ...extra];
+  applyCommunityOverrides();
 }
 async function fetchFrom(host) {
   const ctl = new AbortController(), timer = setTimeout(() => ctl.abort(), 8000);
@@ -2277,6 +2402,8 @@ function startAudio(st, allowNoCorsRetry) {
     if (cur?.id !== st.id) return;
     playing = true; failed.delete(st.id);
     updatePlayIcon(); eqStart(); setStatus('Playing live'); mediaSession(st);
+    updateLiveBadgeUI();
+    syncLivePresence();
     if ('mediaSession' in navigator) navigator.mediaSession.playbackState = 'playing';
     render();
   }).catch(err => {
@@ -2294,7 +2421,8 @@ function startAudio(st, allowNoCorsRetry) {
 
 function streamError(st) {
   playing = false; failed.add(st.id);
-  updatePlayIcon(); eqStop(); setStatus('Stream offline. Try another, or hide it.');
+  updatePlayIcon(); eqStop(); updateLiveBadgeUI();
+  setStatus('Stream offline. Try another, or report/fix it.');
   toast(`${st.name} is offline right now`); render();
 }
 function togglePlay() {
@@ -2307,11 +2435,12 @@ function togglePlay() {
     if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
     audio.play().then(() => {
       playing = true; stallTicks = 0; updatePlayIcon(); eqStart(); setStatus('Playing live');
+      updateLiveBadgeUI(); syncLivePresence();
       if ('mediaSession' in navigator) navigator.mediaSession.playbackState = 'playing';
     }).catch(err => { if (err.name !== 'AbortError') streamError(cur); });
   } else {
     if (recorder && recorder.state === 'recording') recorder.stop();
-    audio.pause(); playing = false; updatePlayIcon(); eqStop(); setStatus('Paused');
+    audio.pause(); playing = false; updatePlayIcon(); eqStop(); updateLiveBadgeUI(); setStatus('Paused');
     if ('mediaSession' in navigator) navigator.mediaSession.playbackState = 'paused';
   }
 }
@@ -2336,7 +2465,7 @@ function step(dir) {
 function closePlayer() {
   if (recorder && recorder.state === 'recording') recorder.stop();
   destroyHls(); audio.pause(); audio.removeAttribute('src'); audio.load();
-  playing = false; cur = null; loaded = false; updatePlayIcon(); eqStop();
+  playing = false; cur = null; loaded = false; updatePlayIcon(); eqStop(); updateLiveBadgeUI();
   updateAppleMusicArtwork(null);
   $('lcdMode').textContent = 'READY';
   $('pTitle').textContent = 'Select a station';
@@ -2491,6 +2620,8 @@ if ($('mobileFavQuickBtn')) {
 
 /* ---------- Native Android Hardware Back Button Handler ---------- */
 function handleAndroidBack() {
+  if (!$('wrappedModal').hidden) { $('wrappedModal').hidden = true; return true; }
+  if (!$('reportModal').hidden) { $('reportModal').hidden = true; return true; }
   if (!$('driveOverlay').hidden) { toggleDriveMode(false); return true; }
   if (consolePane && consolePane.classList.contains('expanded')) { consolePane.classList.remove('expanded'); return true; }
   if (!$('addModal').hidden) { closeAddModal(); return true; }
@@ -2535,7 +2666,7 @@ $('sleepBtn').onclick = () => {
     const left = sleepEnd - Date.now();
     if (left <= 0) {
       clearInterval(sleepTick); sleepIdx = 0; btn.classList.remove('active'); txt.textContent = 'Sleep';
-      if (cur && !audio.paused) { audio.pause(); playing = false; updatePlayIcon(); eqStop(); setStatus('Sleep timer ended'); }
+      if (cur && !audio.paused) { audio.pause(); playing = false; updatePlayIcon(); eqStop(); updateLiveBadgeUI(); setStatus('Sleep timer ended'); }
       return;
     }
     txt.textContent = Math.ceil(left / 60000) + 'm';
@@ -2632,10 +2763,15 @@ function extras() {
     ? customStations.map(x => `<div class="custom-item"><span><strong>${esc(x.name)}</strong> (${esc(x.type)})</span><button class="link" data-del-custom="${esc(x.id)}" style="color:var(--red)">Delete</button></div>`).join('')
     : '<span class="caption">No custom stations added yet.</span>';
 }
+
+let hourlyListenMap = store.get('waveloom_hourly_v1', {});
 setInterval(() => {
   if (!playing || !cur) return;
   const v = listen[cur.id] || (listen[cur.id] = { name: cur.name, sec: 0 });
   v.sec += 10; store.set('waveloom_listen', listen);
+  const hr = String(new Date().getHours());
+  hourlyListenMap[hr] = (hourlyListenMap[hr] || 0) + 10;
+  store.set('waveloom_hourly_v1', hourlyListenMap);
 }, 10000);
 
 document.addEventListener('click', e => {
@@ -2694,7 +2830,7 @@ function startGentleFadeIn(targetVol) {
   clearInterval(fadeInterval);
   audio.volume = 0;
   let stepCount = 0;
-  const totalSteps = 30; // 30 seconds ramp
+  const totalSteps = 30;
   fadeInterval = setInterval(() => {
     stepCount++;
     const nextVol = Math.min(targetVol, (stepCount / totalSteps) * targetVol);
@@ -2735,7 +2871,7 @@ addEventListener('online', () => {
   if (wasPlaying && cur) { wasPlaying = false; failed.delete(cur.id); loaded = false; playStation(cur); }
 });
 document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') { closeAddModal(); toggleDriveMode(false); consolePane?.classList.remove('expanded'); closeSettingsDrawer(); return; }
+  if (e.key === 'Escape') { closeAddModal(); toggleDriveMode(false); consolePane?.classList.remove('expanded'); closeSettingsDrawer(); $('wrappedModal').hidden = true; $('reportModal').hidden = true; return; }
   if (e.target.matches('input, select, textarea') || e.ctrlKey || e.metaKey || e.altKey) return;
   if (['1','2','3','4','5'].includes(e.key)) { triggerPreset(+e.key - 1); }
   else if (e.code === 'Space' && !e.target.closest('button, [role=button]')) { e.preventDefault(); togglePlay(); }
@@ -3067,8 +3203,233 @@ async function pollIcyMetadata(st) {
   icyTimer = setInterval(fetchMeta, 25000);
 }
 
+/* ---------- 4. Firebase Live Listener Counter & Crowd-Sourced Stream Fixes ---------- */
+const FIREBASE_DB_URL = 'https://waveloom-live-default-rtdb.asia-southeast1.firebasedatabase.app';
+const hasFirebase = () => FIREBASE_DB_URL.includes('firebase') && !FIREBASE_DB_URL.includes('YOUR_PROJECT_ID');
+const DEVICE_ID = store.get('waveloom_device_id', 'dev-' + Math.random().toString(36).slice(2, 10));
+store.set('waveloom_device_id', DEVICE_ID);
+
+let liveCountsMap = {};
+let communityOverrides = store.get('waveloom_comm_overrides', {});
+
+async function syncLivePresence() {
+  if (!hasFirebase()) return;
+  try {
+    const now = Date.now();
+    if (playing && cur) {
+      await fetch(`${FIREBASE_DB_URL}/presence/${encodeURIComponent(cur.id)}/${DEVICE_ID}.json`, {
+        method: 'PUT',
+        body: JSON.stringify(now)
+      });
+    }
+    const res = await fetch(`${FIREBASE_DB_URL}/presence.json`);
+    if (res.ok) {
+      const data = await res.json() || {};
+      const counts = {};
+      for (const [stId, users] of Object.entries(data)) {
+        if (!users) continue;
+        const active = Object.values(users).filter(ts => typeof ts === 'number' && (now - ts) < 45000).length;
+        if (active > 0) counts[stId] = active;
+      }
+      liveCountsMap = counts;
+      updateLiveBadgeUI();
+    }
+  } catch {}
+}
+
+function updateLiveBadgeUI() {
+  const badge = $('liveCountBadge');
+  const txt = $('liveCountTxt');
+  if (!badge || !txt) return;
+  if (!cur || !playing) { badge.hidden = true; return; }
+  const count = Math.max(1, liveCountsMap[cur.id] || 1);
+  txt.textContent = `${count} listening live`;
+  badge.hidden = false;
+}
+
+setInterval(syncLivePresence, 20000);
+
+async function fetchCommunityOverrides() {
+  if (!hasFirebase()) return;
+  try {
+    const res = await fetch(`${FIREBASE_DB_URL}/overrides.json`);
+    if (!res.ok) return;
+    const data = await res.json() || {};
+    communityOverrides = data;
+    store.set('waveloom_comm_overrides', data);
+    applyCommunityOverrides();
+  } catch {}
+}
+
+function applyCommunityOverrides() {
+  let changed = false;
+  allStations.forEach(st => {
+    const ov = communityOverrides[st.id];
+    if (ov && ov.url && ov.url !== st.url) {
+      st.url = ov.url;
+      failed.delete(st.id);
+      changed = true;
+    }
+    if (ov && (ov.offlineReports || 0) >= 3 && !ov.url) {
+      failed.add(st.id);
+      changed = true;
+    }
+  });
+  if (changed) render();
+}
+
+$('reportStreamBtn').onclick = () => {
+  if (!cur) { toast('Select a station first'); return; }
+  $('reportStationTitle').textContent = `Station: ${cur.name}`;
+  $('reportModal').hidden = false;
+};
+$('cancelReportBtn').onclick = () => { $('reportModal').hidden = true; };
+
+$('confirmOfflineBtn').onclick = async () => {
+  if (!cur) return;
+  const stId = cur.id;
+  failed.add(stId);
+  render();
+  $('reportModal').hidden = true;
+  toast(`Reported ${cur.name} as offline. Switching…`);
+  step(1);
+
+  if (hasFirebase()) {
+    try {
+      const prev = (communityOverrides[stId]?.offlineReports || 0) + 1;
+      await fetch(`${FIREBASE_DB_URL}/overrides/${encodeURIComponent(stId)}.json`, {
+        method: 'PATCH',
+        body: JSON.stringify({ offlineReports: prev, lastReported: Date.now() })
+      });
+    } catch {}
+  }
+};
+
+$('submitFixUrlForm').onsubmit = async e => {
+  e.preventDefault();
+  if (!cur) return;
+  const newUrl = $('fixStreamUrl').value.trim();
+  if (!newUrl) return;
+  const st = cur;
+  st.url = newUrl;
+  failed.delete(st.id);
+  $('reportModal').hidden = true;
+  $('submitFixUrlForm').reset();
+  cur = null;
+  playStation(st);
+  toast('Stream updated & synced for all listeners!');
+
+  if (hasFirebase()) {
+    try {
+      await fetch(`${FIREBASE_DB_URL}/overrides/${encodeURIComponent(st.id)}.json`, {
+        method: 'PUT',
+        body: JSON.stringify({ url: newUrl, offlineReports: 0, updatedAt: Date.now() })
+      });
+    } catch {}
+  }
+};
+
+/* ---------- 5. Waveloom Wrapped (Total Played Hours, Peak Slot & Shareable PNG Card) ---------- */
+function computeWrappedStats() {
+  const entries = Object.values(listen);
+  const totalSec = entries.reduce((sum, x) => sum + (x.sec || 0), 0);
+  const totalHrs = (totalSec / 3600).toFixed(1);
+  const top = [...entries].sort((a, b) => b.sec - a.sec)[0];
+
+  let bestHr = -1, bestSec = 0;
+  for (const [hr, sec] of Object.entries(hourlyListenMap)) {
+    if (sec > bestSec) { bestSec = sec; bestHr = +hr; }
+  }
+  const slotLabel = bestHr < 0 ? 'Anytime'
+    : bestHr >= 5 && bestHr < 11 ? `Morning (${bestHr} AM)`
+    : bestHr >= 11 && bestHr < 17 ? `Afternoon (${bestHr > 12 ? bestHr - 12 : bestHr} PM)`
+    : bestHr >= 17 && bestHr < 22 ? `Evening (${bestHr - 12} PM)`
+    : `Night Owl (${bestHr === 0 ? 12 : bestHr > 12 ? bestHr - 12 : bestHr} ${bestHr >= 12 ? 'PM' : 'AM'})`;
+
+  const vibe = totalSec > 36000 ? 'Radio Addict' : totalSec > 7200 ? 'Daily Listener' : entries.length > 5 ? 'Station Hopper' : 'FM Explorer';
+
+  return {
+    month: new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' }),
+    topName: top ? top.name : 'No Station Yet',
+    topMins: top ? Math.max(1, Math.round(top.sec / 60)) : 0,
+    totalHrs,
+    peakSlot: slotLabel,
+    stationCount: entries.length,
+    vibe
+  };
+}
+
+$('openWrappedBtn').onclick = () => {
+  closeSettingsDrawer();
+  const s = computeWrappedStats();
+  $('wrapMonthLabel').textContent = s.month;
+  $('wrapTopStation').textContent = s.topName;
+  $('wrapTopSub').textContent = s.topMins ? `Your #1 station (${s.topMins} mins played)` : 'Play stations to unlock your stats';
+  $('wrapTotalHours').textContent = `${s.totalHrs} hrs`;
+  $('wrapPeakTime').textContent = s.peakSlot;
+  $('wrapStationCount').textContent = String(s.stationCount);
+  $('wrapVibe').textContent = s.vibe;
+  $('wrappedModal').hidden = false;
+};
+$('closeWrappedBtn').onclick = () => { $('wrappedModal').hidden = true; };
+
+$('shareWrappedImgBtn').onclick = async () => {
+  const s = computeWrappedStats();
+  const canvas = document.createElement('canvas');
+  canvas.width = 720;
+  canvas.height = 900;
+  const ctx = canvas.getContext('2d');
+
+  const grad = ctx.createLinearGradient(0, 0, 720, 900);
+  grad.addColorStop(0, '#0B1F17');
+  grad.addColorStop(0.55, '#1E6B4B');
+  grad.addColorStop(1, '#09140F');
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, 720, 900);
+
+  ctx.fillStyle = '#6EE7B7';
+  ctx.font = 'bold 24px sans-serif';
+  ctx.fillText('WAVELOOM WRAPPED · ' + s.month.toUpperCase(), 54, 86);
+
+  ctx.fillStyle = 'rgba(255,255,255,0.75)';
+  ctx.font = '26px sans-serif';
+  ctx.fillText('My #1 Malayalam Station', 54, 175);
+
+  ctx.fillStyle = '#FFFFFF';
+  ctx.font = 'bold 50px sans-serif';
+  ctx.fillText(s.topName.slice(0, 22), 54, 238);
+
+  const drawBox = (x, y, label, val) => {
+    ctx.fillStyle = 'rgba(255,255,255,0.12)';
+    ctx.beginPath();
+    ctx.roundRect(x, y, 295, 160, 22);
+    ctx.fill();
+    ctx.fillStyle = 'rgba(255,255,255,0.75)';
+    ctx.font = 'bold 20px sans-serif';
+    ctx.fillText(label.toUpperCase(), x + 24, y + 52);
+    ctx.fillStyle = '#6EE7B7';
+    ctx.font = 'bold 40px sans-serif';
+    ctx.fillText(val, x + 24, y + 115);
+  };
+
+  drawBox(54, 320, 'Total Played', `${s.totalHrs} hrs`);
+  drawBox(371, 320, 'Peak Time', s.peakSlot);
+  drawBox(54, 510, 'Stations Tuned', String(s.stationCount));
+  drawBox(371, 510, 'Listener Vibe', s.vibe);
+
+  ctx.fillStyle = 'rgba(255,255,255,0.6)';
+  ctx.font = '24px sans-serif';
+  ctx.fillText('Waveloom · Malayalam Radio Studio', 54, 830);
+
+  canvas.toBlob(async blob => {
+    if (!blob) return;
+    const shared = await shareOrDownloadFile(blob, 'waveloom-wrapped.png', 'image/png');
+    if (!shared) toast('Wrapped card saved!');
+  }, 'image/png');
+};
+
 /* ---------- GitHub Releases Auto-Update Checker ---------- */
-const CURRENT_APP_VERSION = 'v1.2.0';
+const CURRENT_APP_VERSION = 'v1.3.0';
 const GITHUB_REPO = 'midhunmalayil1998-debug/waveloom';
 
 if ($('appVerLabel')) $('appVerLabel').textContent = CURRENT_APP_VERSION;
@@ -3150,6 +3511,7 @@ window.handleWidgetCommand = cmd => {
 eqStop(); initThemeUI(); applyLang();
 if ('remote' in audio || audio.webkitShowPlaybackTargetPicker) $('castBtn').hidden = false;
 const dirLoad = loadDirectory(); resume(); dirLoad.then(resume);
+fetchCommunityOverrides();
 if (!navigator.onLine) $('offline').hidden = false;
 if ('serviceWorker' in navigator && location.protocol.startsWith('http')) navigator.serviceWorker.register('sw.js').catch(() => {});
 </script>
