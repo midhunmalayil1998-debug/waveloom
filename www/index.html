@@ -14,7 +14,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Noto+Sans+Malayalam:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
 :root {
-  --radius: 14px;
+  --radius: 16px;
   --bg: #F4F6F4;
   --text: #132019;
   --accent: #1E6B4B;
@@ -39,7 +39,7 @@
 html { color-scheme: light; }
 html.dark { color-scheme: dark; }
 body {
-  font-family: 'Plus Jakarta Sans', 'Noto Sans Malayalam', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Plus Jakarta Sans', 'Noto Sans Malayalam', sans-serif;
   background: var(--bg);
   color: var(--text);
   line-height: 1.5;
@@ -54,7 +54,7 @@ button, input, select { font: inherit; color: inherit; }
 /* App Shell Layout */
 .app-shell {
   display: grid;
-  grid-template-columns: 250px 1fr 340px;
+  grid-template-columns: 250px 1fr 350px;
   min-height: 100dvh;
   max-width: 1480px;
   margin: 0 auto;
@@ -137,7 +137,7 @@ button, input, select { font: inherit; color: inherit; }
 
 /* Center Content Feed */
 .center-pane { padding: 24px 28px 130px; min-width: 0; }
-.top-search-bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 24px; flex-wrap: wrap; }
+.top-search-bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; }
 .mobile-brand { display: none; align-items: center; gap: 10px; }
 .search-wrap { position: relative; flex: 1; min-width: 180px; max-width: 400px; }
 .search-wrap input {
@@ -166,36 +166,94 @@ button, input, select { font: inherit; color: inherit; }
   justify-content: space-between;
   gap: 16px;
   flex-wrap: wrap;
-  margin-bottom: 18px;
-  padding-bottom: 16px;
+  margin-bottom: 16px;
+  padding-bottom: 14px;
   border-bottom: 1px solid var(--border);
 }
 .hero-header h1 {
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 1.75rem;
-  font-weight: 700;
-  letter-spacing: -.025em;
+  font-family: -apple-system, BlinkMacSystemFont, 'Space Grotesk', sans-serif;
+  font-size: 1.85rem;
+  font-weight: 800;
+  letter-spacing: -.03em;
   display: flex;
   align-items: baseline;
   gap: 10px;
 }
-.hero-header h1 span { font-family: 'Noto Sans Malayalam', sans-serif; font-size: 1.25rem; font-weight: 500; color: var(--accent); }
-.hero-header p { font-size: .92rem; color: var(--muted); margin-top: 2px; }
+.hero-header h1 span { font-family: 'Noto Sans Malayalam', sans-serif; font-size: 1.2rem; font-weight: 600; color: var(--accent); }
+.hero-header p { font-size: .9rem; color: var(--muted); margin-top: 2px; }
 .suggest {
-  font-size: .86rem;
+  font-size: .84rem;
   background: var(--hl);
   border: 1px solid color-mix(in srgb, var(--accent) 25%, transparent);
-  padding: 8px 14px;
+  padding: 7px 13px;
   border-radius: 10px;
 }
 .link { background: none; border: 0; color: var(--accent); font-weight: 700; text-decoration: underline; cursor: pointer; }
 
+/* Apple Music "Listen Now" Featured Horizontal Carousel */
+.featured-section { margin-bottom: 20px; }
+.featured-carousel {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  padding-bottom: 6px;
+  scroll-snap-type: x mandatory;
+}
+.featured-carousel::-webkit-scrollbar { display: none; }
+.feat-card {
+  flex: 0 0 154px;
+  scroll-snap-align: start;
+  background: var(--card-solid);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 10px;
+  cursor: pointer;
+  transition: transform .18s ease, box-shadow .18s ease;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.feat-card:active { transform: scale(.96); }
+.feat-card.active { border-color: var(--accent); background: var(--hl); }
+.feat-art {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  border-radius: 12px;
+  position: relative;
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 2rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, hsl(var(--h) 55% 38%), hsl(calc(var(--h) + 35) 65% 24%));
+  box-shadow: 0 8px 18px rgba(0,0,0,.15);
+}
+.feat-art img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; background: #fff; }
+.feat-badge {
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  background: rgba(0,0,0,.55);
+  backdrop-filter: blur(8px);
+  color: #fff;
+  font-size: .62rem;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 999px;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+}
+.feat-name { font-size: .84rem; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.feat-sub { font-size: .72rem; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: -4px; }
+
 /* 5-Slot Car-Stereo Presets Strip */
 .presets-bar {
-  margin-bottom: 20px;
+  margin-bottom: 18px;
   background: var(--card);
   border: 1px solid var(--border);
-  border-radius: 13px;
+  border-radius: 14px;
   padding: 10px 12px;
 }
 .presets-head {
@@ -258,8 +316,8 @@ button, input, select { font: inherit; color: inherit; }
 .preset-slot.empty .preset-name { color: var(--muted); font-weight: 400; }
 
 /* Recent Strip */
-#recentWrap { margin-bottom: 20px; }
-.section-label { font-size: .75rem; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin-bottom: 10px; }
+#recentWrap { margin-bottom: 18px; }
+.section-label { font-size: .74rem; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin-bottom: 9px; }
 .chips { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; }
 .chip {
   flex-shrink: 0;
@@ -311,15 +369,15 @@ button, input, select { font: inherit; color: inherit; }
 .pill-btn.primary:hover { opacity: .92; }
 select.pill-btn { max-width: 165px; }
 
-.caption { font-size: .8rem; color: var(--muted); margin-bottom: 14px; }
+.caption { font-size: .8rem; color: var(--muted); margin-bottom: 12px; }
 
 /* Station Cards Grid */
-.grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
 .cell {
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 12px 14px;
+  padding: 11px 13px;
   background: var(--card-solid);
   border: 1px solid var(--border);
   border-radius: var(--radius);
@@ -332,8 +390,8 @@ select.pill-btn { max-width: 165px; }
 .cell.failed { opacity: .55; }
 .av {
   position: relative;
-  width: 44px;
-  height: 44px;
+  width: 46px;
+  height: 46px;
   border-radius: 12px;
   flex-shrink: 0;
   overflow: hidden;
@@ -343,7 +401,7 @@ select.pill-btn { max-width: 165px; }
   font-family: 'Space Grotesk', sans-serif;
   font-weight: 700;
   font-size: 1.05rem;
-  background: hsl(var(--h) 42% 36%);
+  background: linear-gradient(135deg, hsl(var(--h) 48% 40%), hsl(calc(var(--h) + 30) 55% 28%));
 }
 .av img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; background: #fff; }
 .info { min-width: 0; flex: 1; }
@@ -406,7 +464,7 @@ select.pill-btn { max-width: 165px; }
   font-size: .84rem;
 }
 
-/* Right Broadcast Console */
+/* Right Broadcast Console & Apple Music Now-Playing Card */
 .console-pane {
   border-left: 1px solid var(--border);
   padding: 20px 18px;
@@ -420,70 +478,136 @@ select.pill-btn { max-width: 165px; }
   overflow-y: auto;
 }
 .console-card {
+  position: relative;
+  overflow: hidden;
   background: var(--console);
   color: #F8FAFC;
-  border-radius: 20px;
+  border-radius: 22px;
   padding: 18px;
-  border: 1px solid rgba(255,255,255,.1);
+  border: 1px solid rgba(255,255,255,.12);
   box-shadow: 0 20px 40px -15px rgba(0,0,0,.35);
 }
+
+/* Apple Music Dynamic Blurred Mesh Backdrop */
+.am-mesh-bg {
+  position: absolute;
+  inset: -40px;
+  z-index: 0;
+  pointer-events: none;
+  opacity: .55;
+  filter: blur(55px) saturate(1.6);
+  background:
+    radial-gradient(circle at 20% 20%, var(--console-accent), transparent 55%),
+    radial-gradient(circle at 80% 75%, var(--accent), transparent 60%),
+    radial-gradient(circle at 50% 50%, #090D0B, #090D0B);
+  background-size: cover;
+  background-position: center;
+  animation: meshFloat 14s ease-in-out infinite alternate;
+  transition: background-image .6s ease;
+}
+@keyframes meshFloat {
+  0% { transform: scale(1) translate(0, 0); }
+  100% { transform: scale(1.14) translate(-12px, 10px); }
+}
+.console-card > *:not(.am-mesh-bg) { position: relative; z-index: 1; }
+
+/* Apple Music Centered Artwork Card (Spring Scale on Play/Pause) */
+.am-artwork-wrap {
+  display: flex;
+  justify-content: center;
+  margin: 6px 0 14px;
+}
+.am-artwork {
+  width: 148px;
+  height: 148px;
+  border-radius: 20px;
+  position: relative;
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 3.2rem;
+  font-weight: 700;
+  color: #fff;
+  background: linear-gradient(135deg, rgba(255,255,255,.16), rgba(255,255,255,.04));
+  border: 1px solid rgba(255,255,255,.18);
+  box-shadow: 0 18px 38px rgba(0,0,0,.45);
+  transform: scale(0.86);
+  transition: transform .45s cubic-bezier(.22, 1.25, .36, 1), box-shadow .45s ease;
+}
+.am-artwork.playing {
+  transform: scale(1);
+  box-shadow: 0 24px 48px rgba(0,0,0,.55);
+}
+.am-artwork img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  background: #fff;
+}
+
 .tuner-screen {
-  background: rgba(0,0,0,.35);
+  background: rgba(0,0,0,.32);
+  backdrop-filter: blur(12px);
   border: 1px solid rgba(255,255,255,.1);
   border-radius: 14px;
-  padding: 12px 14px;
-  margin-bottom: 14px;
+  padding: 10px 12px;
+  margin-bottom: 12px;
 }
 .tuner-top {
   display: flex;
   justify-content: space-between;
   align-items: center;
   font-family: 'JetBrains Mono', monospace;
-  font-size: .68rem;
+  font-size: .66rem;
   color: var(--console-accent);
-  margin-bottom: 10px;
+  margin-bottom: 8px;
 }
 .live-pill { display: inline-flex; align-items: center; gap: 6px; padding: 2px 8px; border-radius: 999px; background: rgba(255,255,255,.08); }
 .lcd-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--console-accent); }
 .tuner-screen.on .lcd-dot { animation: blink 1s infinite; }
 @keyframes blink { 50% { opacity: .25; transform: scale(.75); } }
 
-.eq { height: 46px; display: flex; gap: 3px; align-items: flex-end; }
+.eq { height: 34px; display: flex; gap: 3px; align-items: flex-end; }
 .eq-col { flex: 1; height: 100%; display: flex; flex-direction: column-reverse; gap: 2px; }
-.eq-seg { height: 4px; border-radius: 1px; background: rgba(255,255,255,.1); transition: background .06s; }
+.eq-seg { height: 3px; border-radius: 1px; background: rgba(255,255,255,.12); transition: background .06s; }
 .eq-seg.lit { background: var(--console-accent); box-shadow: 0 0 6px var(--console-accent); }
 
-.now-meta { margin-bottom: 14px; }
-.p-cat { font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--console-accent); }
-.p-title { font-family: 'Space Grotesk', sans-serif; font-size: 1.2rem; font-weight: 700; margin: 3px 0; line-height: 1.25; }
-.p-status { font-size: .8rem; opacity: .75; }
+.now-meta { margin-bottom: 12px; }
+.p-cat { font-size: .7rem; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--console-accent); }
+.p-title { font-family: -apple-system, BlinkMacSystemFont, 'Space Grotesk', sans-serif; font-size: 1.25rem; font-weight: 700; margin: 2px 0; line-height: 1.25; }
+.p-status { font-size: .8rem; opacity: .78; }
 
-.transport { display: flex; align-items: center; justify-content: center; gap: 14px; margin-bottom: 14px; }
+.transport { display: flex; align-items: center; justify-content: center; gap: 16px; margin-bottom: 14px; }
 .play-btn {
-  width: 54px;
-  height: 54px;
+  width: 56px;
+  height: 56px;
   border-radius: 50%;
   border: 0;
-  background: var(--console-accent);
-  color: var(--console);
+  background: #fff;
+  color: #090D0B;
   display: grid;
   place-items: center;
   cursor: pointer;
+  box-shadow: 0 8px 20px rgba(0,0,0,.3);
   transition: transform .15s;
 }
 .play-btn:hover { transform: scale(1.06); }
+.play-btn:active { transform: scale(.93); }
 .t-btn {
-  width: 38px;
-  height: 38px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   border: 1px solid rgba(255,255,255,.15);
-  background: rgba(255,255,255,.06);
+  background: rgba(255,255,255,.08);
   color: #fff;
   display: grid;
   place-items: center;
   cursor: pointer;
 }
-.t-btn:hover { background: rgba(255,255,255,.15); color: var(--console-accent); }
+.t-btn:hover { background: rgba(255,255,255,.18); color: var(--console-accent); }
 
 .eq-presets {
   display: grid;
@@ -497,7 +621,7 @@ select.pill-btn { max-width: 165px; }
 .eq-p-btn {
   background: transparent;
   border: 0;
-  color: rgba(255,255,255,.65);
+  color: rgba(255,255,255,.68);
   font-size: .68rem;
   font-weight: 600;
   padding: 5px 2px;
@@ -505,37 +629,39 @@ select.pill-btn { max-width: 165px; }
   cursor: pointer;
 }
 .eq-p-btn:hover { color: #fff; }
-.eq-p-btn.active { background: var(--console-accent); color: var(--console); }
+.eq-p-btn.active { background: rgba(255,255,255,.92); color: #090D0B; }
 
 .vol-box {
   display: flex;
   align-items: center;
   gap: 10px;
   padding: 8px 12px;
-  background: rgba(255,255,255,.06);
-  border-radius: 11px;
+  background: rgba(255,255,255,.08);
+  border-radius: 12px;
   margin-bottom: 12px;
 }
-.vol-box input { flex: 1; accent-color: var(--console-accent); }
+.vol-box input { flex: 1; accent-color: #fff; }
 
 .console-actions { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
 .dock {
-  background: rgba(255,255,255,.06);
-  border: 1px solid rgba(255,255,255,.08);
+  background: rgba(255,255,255,.08);
+  border: 1px solid rgba(255,255,255,.1);
   color: #F8FAFC;
   cursor: pointer;
   padding: 8px 4px;
-  border-radius: 10px;
+  border-radius: 12px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 3px;
   font-size: .66rem;
+  transition: transform .12s, background .15s;
 }
-.dock:hover { color: var(--console-accent); background: rgba(255,255,255,.12); }
-.dock.active { color: var(--console-accent); border-color: var(--console-accent); }
-.dock.recording { background: rgba(220, 38, 38, .25); border-color: #F87171; color: #FCA5A5; animation: pulseRec 1.2s infinite; }
+.dock:active { transform: scale(.94); }
+.dock:hover { color: var(--console-accent); background: rgba(255,255,255,.14); }
+.dock.active { color: var(--console-accent); border-color: var(--console-accent); background: rgba(255,255,255,.14); }
+.dock.recording { background: rgba(220, 38, 38, .35); border-color: #F87171; color: #FCA5A5; animation: pulseRec 1.2s infinite; }
 @keyframes pulseRec { 50% { opacity: .65; } }
 
 .console-hint { font-size: .76rem; color: var(--muted); text-align: center; padding: 10px; border: 1px dashed var(--border); border-radius: 12px; margin-top: 12px; }
@@ -654,7 +780,7 @@ select.pill-btn { max-width: 165px; }
   position: fixed;
   inset: 0;
   background: rgba(0,0,0,.55);
-  backdrop-filter: blur(4px);
+  backdrop-filter: blur(6px);
   z-index: 500;
   opacity: 0;
   pointer-events: none;
@@ -675,7 +801,7 @@ select.pill-btn { max-width: 165px; }
   border-left: 1px solid var(--border);
   z-index: 550;
   transform: translateX(100%);
-  transition: transform .28s cubic-bezier(.2, .8, .2, 1);
+  transition: transform .3s cubic-bezier(.22, 1, .36, 1);
   display: flex;
   flex-direction: column;
   padding: calc(16px + env(safe-area-inset-top)) 16px calc(24px + env(safe-area-inset-bottom));
@@ -709,13 +835,14 @@ select.pill-btn { max-width: 165px; }
   left: 50%;
   top: 18px;
   transform: translate(-50%, -80px);
-  background: var(--console);
+  background: rgba(16, 36, 27, .92);
+  backdrop-filter: blur(12px);
   color: #fff;
   padding: 10px 18px;
   border-radius: 999px;
   font-size: .84rem;
   z-index: 800;
-  box-shadow: var(--shadow);
+  box-shadow: 0 10px 25px rgba(0,0,0,.3);
   transition: transform .3s;
   max-width: 90vw;
   text-align: center;
@@ -725,8 +852,8 @@ select.pill-btn { max-width: 165px; }
 .sk { height: 68px; cursor: default; background: linear-gradient(90deg, var(--card), var(--hover), var(--card)); background-size: 200% 100%; animation: sh 1.2s infinite; }
 @keyframes sh { to { background-position: -200% 0; } }
 
-/* ---------- SPOTIFY / APPLE MUSIC MOBILE ARCHITECTURE (NO BOTTOM BAR) ---------- */
-.np-sheet-header, .np-collapse-btn, .mini-expand-hint { display: none; }
+/* ---------- APPLE MUSIC MOBILE ARCHITECTURE (FROSTED GLASS + SWIPE SHEET) ---------- */
+.np-sheet-header, .np-grabber, .mini-expand-hint { display: none; }
 
 @media (max-width: 1120px) {
   html, body {
@@ -746,7 +873,7 @@ select.pill-btn { max-width: 165px; }
   .center-pane {
     width: 100% !important;
     max-width: 100vw !important;
-    padding: 12px 14px 96px !important;
+    padding: 12px 14px 98px !important;
     overflow-x: hidden !important;
   }
   .mobile-brand {
@@ -768,7 +895,7 @@ select.pill-btn { max-width: 165px; }
   .quick-actions { display: flex; width: 100%; gap: 6px; }
   .quick-actions .pill-btn { flex: 1; justify-content: center; padding: 7px 6px; font-size: .74rem; white-space: nowrap; }
 
-  .hero-header h1 { font-size: 1.5rem; }
+  .hero-header h1 { font-size: 1.6rem; }
 
   /* Horizontal Scrollable Presets */
   .presets-bar { padding: 10px; margin-bottom: 14px; }
@@ -801,7 +928,7 @@ select.pill-btn { max-width: 165px; }
   .grid { display: grid !important; grid-template-columns: minmax(0, 1fr) !important; gap: 8px !important; width: 100% !important; }
   .cell { width: 100% !important; max-width: 100% !important; padding: 10px 12px !important; }
 
-  /* ---------- FLOATING MINI-PLAYER BAR AT VERY BOTTOM ---------- */
+  /* ---------- APPLE MUSIC FROSTED GLASS FLOATING MINI-PLAYER ---------- */
   .console-pane:not(.expanded) {
     position: fixed !important;
     left: 10px !important;
@@ -809,19 +936,21 @@ select.pill-btn { max-width: 165px; }
     bottom: calc(10px + env(safe-area-inset-bottom)) !important;
     top: auto !important;
     width: auto !important;
-    height: 62px !important;
+    height: 64px !important;
     padding: 8px 12px !important;
-    border-radius: 16px !important;
-    border: 1px solid rgba(255,255,255,.14) !important;
-    background: var(--console) !important;
-    box-shadow: 0 10px 28px rgba(0,0,0,.45) !important;
+    border-radius: 18px !important;
+    border: 1px solid rgba(255,255,255,.16) !important;
+    background: color-mix(in srgb, var(--console) 82%, transparent) !important;
+    backdrop-filter: blur(24px) saturate(1.8) !important;
+    -webkit-backdrop-filter: blur(24px) saturate(1.8) !important;
+    box-shadow: 0 14px 34px rgba(0,0,0,.42) !important;
     z-index: 390 !important;
     overflow: hidden !important;
     cursor: pointer;
-    transition: all .25s ease;
+    transition: all .28s cubic-bezier(.22, 1, .36, 1);
   }
   .console-pane:not(.expanded) .console-hint,
-  .console-pane:not(.expanded) .tuner-top,
+  .console-pane:not(.expanded) .tuner-screen,
   .console-pane:not(.expanded) .vol-box,
   .console-pane:not(.expanded) .eq-presets,
   .console-pane:not(.expanded) #timeshiftBox,
@@ -832,7 +961,7 @@ select.pill-btn { max-width: 165px; }
   .console-pane:not(.expanded) .console-card {
     display: flex !important;
     align-items: center !important;
-    gap: 10px !important;
+    gap: 11px !important;
     width: 100% !important;
     padding: 0 !important;
     margin: 0 !important;
@@ -840,15 +969,15 @@ select.pill-btn { max-width: 165px; }
     box-shadow: none !important;
     background: transparent !important;
   }
-  .console-pane:not(.expanded) .tuner-screen {
-    width: 42px !important;
-    height: 42px !important;
-    padding: 5px !important;
-    margin: 0 !important;
-    flex-shrink: 0 !important;
+  .console-pane:not(.expanded) .am-artwork-wrap { margin: 0 !important; flex-shrink: 0 !important; }
+  .console-pane:not(.expanded) .am-artwork {
+    width: 44px !important;
+    height: 44px !important;
     border-radius: 10px !important;
+    font-size: 1.15rem !important;
+    transform: scale(1) !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,.3) !important;
   }
-  .console-pane:not(.expanded) .eq { height: 28px !important; gap: 2px !important; }
   .console-pane:not(.expanded) .now-meta {
     flex: 1 1 auto !important;
     min-width: 0 !important;
@@ -857,7 +986,7 @@ select.pill-btn { max-width: 165px; }
   }
   .console-pane:not(.expanded) .p-cat { display: none !important; }
   .console-pane:not(.expanded) .p-title {
-    font-size: .92rem !important;
+    font-size: .94rem !important;
     margin: 0 !important;
     white-space: nowrap !important;
     overflow: hidden !important;
@@ -866,13 +995,13 @@ select.pill-btn { max-width: 165px; }
   .console-pane:not(.expanded) .p-status,
   .console-pane:not(.expanded) #icyMeta {
     font-size: .72rem !important;
-    margin: 2px 0 0 !important;
+    margin: 1px 0 0 !important;
     white-space: nowrap !important;
     overflow: hidden !important;
     text-overflow: ellipsis !important;
   }
-  .console-pane:not(.expanded) .transport { margin: 0 !important; flex-shrink: 0 !important; gap: 8px !important; }
-  .console-pane:not(.expanded) .play-btn { width: 40px !important; height: 40px !important; flex-shrink: 0 !important; }
+  .console-pane:not(.expanded) .transport { margin: 0 !important; flex-shrink: 0 !important; gap: 6px !important; }
+  .console-pane:not(.expanded) .play-btn { width: 38px !important; height: 38px !important; flex-shrink: 0 !important; }
   .console-pane:not(.expanded) .mini-expand-hint {
     display: flex !important;
     align-items: center;
@@ -882,14 +1011,14 @@ select.pill-btn { max-width: 165px; }
     padding-left: 2px;
   }
 
-  /* ---------- FULL-SCREEN NOW PLAYING SHEET (EXPANDED STATE) ---------- */
+  /* ---------- APPLE MUSIC FULL-SCREEN NOW PLAYING SHEET ---------- */
   .console-pane.expanded {
     position: fixed !important;
     inset: 0 !important;
     width: 100vw !important;
     height: 100dvh !important;
     max-width: 100vw !important;
-    padding: calc(16px + env(safe-area-inset-top)) 20px calc(24px + env(safe-area-inset-bottom)) !important;
+    padding: calc(12px + env(safe-area-inset-top)) 22px calc(24px + env(safe-area-inset-bottom)) !important;
     background: var(--console) !important;
     color: #F8FAFC !important;
     z-index: 600 !important;
@@ -898,22 +1027,31 @@ select.pill-btn { max-width: 165px; }
     flex-direction: column !important;
     justify-content: space-between !important;
   }
+  .console-pane.expanded .np-grabber {
+    display: block !important;
+    width: 40px;
+    height: 5px;
+    border-radius: 999px;
+    background: rgba(255,255,255,.32);
+    margin: 0 auto 10px;
+    flex-shrink: 0;
+  }
   .console-pane.expanded .np-sheet-header {
     display: flex !important;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 14px;
+    margin-bottom: 8px;
     color: #F8FAFC;
   }
   .console-pane.expanded .np-collapse-btn {
     display: inline-flex !important;
     align-items: center;
     justify-content: center;
-    width: 38px;
-    height: 38px;
+    width: 36px;
+    height: 36px;
     border-radius: 50%;
     border: 0;
-    background: rgba(255,255,255,.12);
+    background: rgba(255,255,255,.14);
     color: #F8FAFC;
     cursor: pointer;
   }
@@ -922,27 +1060,28 @@ select.pill-btn { max-width: 165px; }
     border: 0 !important;
     padding: 0 !important;
     background: transparent !important;
+    overflow: visible !important;
   }
-  .console-pane.expanded .tuner-screen {
-    padding: 18px !important;
-    margin-bottom: 18px !important;
-    border-radius: 18px !important;
+  .console-pane.expanded .am-artwork-wrap { margin: 10px 0 18px !important; }
+  .console-pane.expanded .am-artwork {
+    width: min(230px, 58vw) !important;
+    height: min(230px, 58vw) !important;
+    border-radius: 26px !important;
+    font-size: 4.5rem !important;
   }
-  .console-pane.expanded .eq { height: 96px !important; }
-  .console-pane.expanded .p-title { font-size: 1.45rem !important; }
-  .console-pane.expanded .transport { margin: 18px 0 !important; gap: 22px !important; }
-  .console-pane.expanded .play-btn { width: 64px !important; height: 64px !important; }
-  .console-pane.expanded .t-btn { display: inline-flex !important; width: 46px !important; height: 46px !important; }
+  .console-pane.expanded .tuner-screen { padding: 10px 14px !important; margin-bottom: 14px !important; }
+  .console-pane.expanded .eq { height: 42px !important; }
+  .console-pane.expanded .p-title { font-size: 1.5rem !important; }
+  .console-pane.expanded .transport { margin: 18px 0 !important; gap: 26px !important; }
+  .console-pane.expanded .play-btn { width: 68px !important; height: 68px !important; }
+  .console-pane.expanded .t-btn { display: inline-flex !important; width: 48px !important; height: 48px !important; }
   .console-pane.expanded .console-actions {
     display: grid !important;
     grid-template-columns: repeat(4, 1fr) !important;
     gap: 8px !important;
     margin-top: 14px !important;
   }
-  .console-pane.expanded .dock {
-    padding: 10px 4px !important;
-    font-size: .72rem !important;
-  }
+  .console-pane.expanded .dock { padding: 10px 4px !important; font-size: .72rem !important; }
   .console-pane.expanded .dock span { display: block !important; }
   .console-pane.expanded .console-hint { display: none !important; }
 }
@@ -995,7 +1134,7 @@ select.pill-btn { max-width: 165px; }
       <div class="mobile-brand">
         <div style="display:flex;align-items:center;gap:10px">
           <div class="brand-badge" style="width:32px;height:32px;font-size:1rem">W</div>
-          <strong style="font-family:'Space Grotesk',sans-serif;font-size:1.1rem">Waveloom</strong>
+          <strong style="font-family:'Space Grotesk',sans-serif;font-size:1.15rem">Waveloom</strong>
         </div>
         <div style="display:flex;align-items:center;gap:8px">
           <button class="pill-btn" id="mobileFavQuickBtn" aria-label="Favourites" style="padding:6px 10px">♥ <span id="mobileFavBadge">0</span></button>
@@ -1020,10 +1159,16 @@ select.pill-btn { max-width: 165px; }
     <section id="directory">
       <div class="hero-header">
         <div>
-          <h1 id="viewHeading">Malayalam <span>മലയാളം</span></h1>
+          <h1 id="viewHeading">Listen Now <span>മലയാളം</span></h1>
           <p id="viewSub">Akashvani, FM and online Malayalam stations. Tap a station to play.</p>
         </div>
         <div class="suggest" id="suggest"></div>
+      </div>
+
+      <!-- Apple Music Featured Horizontal Carousel -->
+      <div class="featured-section" id="featuredWrap">
+        <div class="section-label">Featured Malayalam Stations</div>
+        <div class="featured-carousel" id="featuredCarousel"></div>
       </div>
 
       <!-- 5 Car-Stereo Quick Presets -->
@@ -1111,7 +1256,7 @@ select.pill-btn { max-width: 165px; }
       <div class="settings-card">
         <div class="section-label">App Updates & Version</div>
         <div class="row" style="justify-content:space-between;margin-bottom:8px">
-          <span style="font-size:.86rem;font-weight:600">Version: <strong id="appVerLabel" style="color:var(--accent)">v1.0.2</strong></span>
+          <span style="font-size:.86rem;font-weight:600">Version: <strong id="appVerLabel" style="color:var(--accent)">v1.1.0</strong></span>
           <button class="pill-btn primary" id="checkUpdateBtn">🔄 Check Updates</button>
         </div>
         <p id="updateStatusNote" class="caption" style="margin:0">Checks GitHub Releases for newer APK versions.</p>
@@ -1126,22 +1271,33 @@ select.pill-btn { max-width: 165px; }
     </section>
   </main>
 
-  <!-- Right Broadcast Console (Desktop Rail / Mobile Floating Mini-Player + Expandable Now-Playing Sheet) -->
+  <!-- Right Broadcast Console (Desktop Rail / Mobile Apple Music Mini-Player + Full-Screen Sheet) -->
   <aside class="console-pane" id="consolePane" aria-label="Radio console">
-    <!-- Mobile Full-Screen Sheet Top Bar -->
+    <div class="np-grabber" aria-hidden="true"></div>
     <div class="np-sheet-header">
       <button type="button" class="np-collapse-btn" id="npCollapseBtn" aria-label="Minimize Player">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
       </button>
-      <span style="font-size:.75rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;opacity:.8">Now Playing</span>
-      <span style="width:38px"></span>
+      <span style="font-size:.74rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;opacity:.85">Now Playing</span>
+      <span style="width:36px"></span>
     </div>
 
     <div class="console-card">
+      <!-- Dynamic Blurred Mesh Background -->
+      <div class="am-mesh-bg" id="amMeshBg"></div>
+
+      <!-- Apple Music Centered Artwork Card (Scales smoothly on Play/Pause) -->
+      <div class="am-artwork-wrap">
+        <div class="am-artwork" id="amArtwork">
+          <span id="amArtLetter">W</span>
+          <img id="amArtImg" alt="" hidden>
+        </div>
+      </div>
+
       <div class="tuner-screen" id="lcd">
         <div class="tuner-top">
           <span class="live-pill"><span class="lcd-dot"></span><span id="lcdMode">READY</span></span>
-          <span id="vizTag">AUTO-GUARD</span>
+          <span id="vizTag">STUDIO DSP</span>
         </div>
         <div class="eq" id="eq"></div>
       </div>
@@ -1150,34 +1306,33 @@ select.pill-btn { max-width: 165px; }
         <div class="p-cat" id="pCat">Malayalam</div>
         <div class="p-title" id="pTitle">Select a station</div>
         <div class="p-status" id="pStatus" aria-live="polite">Tap any station card to tune in</div>
-        <!-- Live Song / Program Title (ICY Metadata) -->
-        <div id="icyMeta" style="font-size:.76rem;color:var(--console-accent);margin-top:4px;font-weight:600;display:none">🎵 <span id="icyText"></span></div>
+        <div id="icyMeta" style="font-size:.78rem;color:var(--console-accent);margin-top:4px;font-weight:600;display:none">🎵 <span id="icyText"></span></div>
       </div>
 
       <!-- Live Time-Shift / Rewind Buffer Controls -->
-      <div id="timeshiftBox" style="background:rgba(0,0,0,.28);padding:8px 10px;border-radius:10px;margin-bottom:12px">
+      <div id="timeshiftBox" style="background:rgba(0,0,0,.28);padding:8px 10px;border-radius:12px;margin-bottom:12px">
         <div style="display:flex;justify-content:space-between;align-items:center;font-size:.7rem;margin-bottom:6px">
-          <span style="opacity:.75" id="bufferLabel">⏪ Live Buffer: 0s</span>
+          <span style="opacity:.78" id="bufferLabel">⏪ Live Buffer: 0s</span>
           <div style="display:flex;gap:6px">
-            <button type="button" id="rew15Btn" style="background:rgba(255,255,255,.12);border:0;color:#fff;padding:2px 8px;border-radius:6px;cursor:pointer;font-weight:700">-15s</button>
-            <button type="button" id="goLiveBtn" style="background:var(--console-accent);color:var(--console);border:0;padding:2px 8px;border-radius:6px;cursor:pointer;font-weight:700;display:none">● GO LIVE</button>
+            <button type="button" id="rew15Btn" style="background:rgba(255,255,255,.14);border:0;color:#fff;padding:2px 8px;border-radius:6px;cursor:pointer;font-weight:700">-15s</button>
+            <button type="button" id="goLiveBtn" style="background:#fff;color:#090D0B;border:0;padding:2px 8px;border-radius:6px;cursor:pointer;font-weight:700;display:none">● GO LIVE</button>
           </div>
         </div>
-        <input type="range" id="seekBar" min="0" max="0" value="0" step="1" style="width:100%;accent-color:var(--console-accent)" aria-label="Rewind Live Buffer">
+        <input type="range" id="seekBar" min="0" max="0" value="0" step="1" style="width:100%;accent-color:#fff" aria-label="Rewind Live Buffer">
       </div>
 
       <div class="transport">
         <button class="t-btn" id="prevBtn" aria-label="Previous station">
-          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="19 20 9 12 19 4 19 20"/><line x1="5" y1="19" x2="5" y2="5"/></svg>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="19 20 9 12 19 4 19 20"/><line x1="5" y1="19" x2="5" y2="5"/></svg>
         </button>
         <button class="play-btn" id="playBtn" aria-label="Play or pause">
-          <svg id="playIcon" width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+          <svg id="playIcon" width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
         </button>
         <span class="mini-expand-hint" aria-hidden="true">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="18 15 12 9 6 15"/></svg>
         </span>
         <button class="t-btn" id="nextBtn" aria-label="Next station">
-          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 4 15 12 5 20 5 4"/><line x1="19" y1="5" x2="19" y2="19"/></svg>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 4 15 12 5 20 5 4"/><line x1="19" y1="5" x2="19" y2="19"/></svg>
         </button>
       </div>
 
@@ -1323,6 +1478,7 @@ select.pill-btn { max-width: 165px; }
 
 <script>
 const $ = id => document.getElementById(id);
+const haptic = (ms = 12) => { try { if (navigator.vibrate) navigator.vibrate(ms); } catch {} };
 const store = {
   get(k, d) { try { const v = localStorage.getItem(k); return v == null ? d : JSON.parse(v); } catch { return d; } },
   set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} }
@@ -1368,6 +1524,64 @@ let cur = null, playing = false, hls = null, corsMode = true;
 const audio = $('audio');
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+/* ---------- Apple Music Artwork & Dynamic Blurred Mesh Updater ---------- */
+function updateAppleMusicArtwork(st) {
+  const artBox = $('amArtwork');
+  const artLetter = $('amArtLetter');
+  const artImg = $('amArtImg');
+  const meshBg = $('amMeshBg');
+  if (!st) {
+    artLetter.textContent = 'W';
+    artImg.hidden = true;
+    meshBg.style.backgroundImage = '';
+    return;
+  }
+  const initial = ([...st.name.replace(/^(AIR|FM|Radio)\s+/i, '')][0] || '♪').toUpperCase();
+  artLetter.textContent = initial;
+  const h = hue(st.name);
+  artBox.style.background = `linear-gradient(135deg, hsl(${h} 58% 42%), hsl(${(h + 40) % 360} 65% 25%))`;
+
+  if (st.logo) {
+    artImg.src = st.logo;
+    artImg.hidden = false;
+    artImg.onload = () => {
+      meshBg.style.backgroundImage = `url("${st.logo}")`;
+    };
+    artImg.onerror = () => {
+      artImg.hidden = true;
+      meshBg.style.backgroundImage = '';
+    };
+  } else {
+    artImg.hidden = true;
+    meshBg.style.backgroundImage = `radial-gradient(circle at 30% 30%, hsl(${h} 70% 45%), transparent 60%), radial-gradient(circle at 75% 75%, hsl(${(h + 50) % 360} 65% 30%), #090D0B)`;
+  }
+}
+
+/* ---------- Apple Music "Listen Now" Featured Carousel ---------- */
+function renderFeaturedCarousel() {
+  const wrap = $('featuredWrap');
+  const carousel = $('featuredCarousel');
+  if (!wrap || !carousel) return;
+  const on = view === 'stations' && !query && subFilter === 'All';
+  wrap.style.display = on ? 'block' : 'none';
+  if (!on) return;
+
+  const featured = allStations.filter(s => !hidden.includes(s.id)).slice(0, 8);
+  carousel.innerHTML = featured.map(st => {
+    const isCur = cur && cur.id === st.id;
+    const initial = ([...st.name.replace(/^(AIR|FM|Radio)\s+/i, '')][0] || '♪').toUpperCase();
+    return `<div class="feat-card ${isCur ? 'active' : ''}" data-play="${esc(st.id)}" role="button" tabindex="0">
+      <div class="feat-art" style="--h:${hue(st.name)}">
+        <span>${esc(initial)}</span>
+        ${st.logo ? `<img src="${esc(st.logo)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()">` : ''}
+        <span class="feat-badge">${esc(st.type)}</span>
+      </div>
+      <div class="feat-name">${esc(st.name)}</div>
+      <div class="feat-sub">${esc(st.detail)}</div>
+    </div>`;
+  }).join('');
+}
+
 /* ---------- Native Share / File Save Helper (APK WebView Compatible) ---------- */
 async function shareOrDownloadFile(blob, fileName, mimeType) {
   const file = new File([blob], fileName, { type: mimeType });
@@ -1411,6 +1625,7 @@ function renderPresets() {
 }
 
 function triggerPreset(idx) {
+  haptic(12);
   const id = presets[idx];
   const st = id ? findStation(id) : null;
   if (st) {
@@ -1424,6 +1639,7 @@ function triggerPreset(idx) {
 
 function assignPreset(idx) {
   if (!cur) { toast('Play a station first to assign a preset'); return; }
+  haptic(25);
   presets[idx] = cur.id;
   store.set('waveloom_presets_v1', presets);
   renderPresets();
@@ -1518,6 +1734,7 @@ function initAudioGraph() {
 }
 
 function setEqPreset(preset) {
+  haptic(10);
   activeEqPreset = preset;
   document.querySelectorAll('.eq-p-btn').forEach(b => b.classList.toggle('active', b.dataset.eq === preset));
   const gains = EQ_PRESETS[preset] || EQ_PRESETS.flat;
@@ -1532,6 +1749,7 @@ document.querySelectorAll('.eq-p-btn').forEach(b => b.onclick = () => setEqPrese
 let recorder = null, recChunks = [], recTimer = null, recSeconds = 0;
 
 function toggleRecording() {
+  haptic(15);
   if (recorder && recorder.state === 'recording') {
     recorder.stop();
     return;
@@ -1614,6 +1832,7 @@ function initThemeUI() {
     </button>`).join('');
   $('swatches').addEventListener('click', e => {
     const b = e.target.closest('.swatch'); if (!b) return;
+    haptic(10);
     themeId = b.dataset.id; store.set('waveloom_studio_theme', themeId); applyTheme();
   });
   $('lightBtn').onclick = () => { dark = false; store.set('waveloom_dark_mode', false); applyTheme(); };
@@ -1752,7 +1971,7 @@ function filtered() {
   return list;
 }
 function render() {
-  buildRegions(); renderHome(); renderPresets();
+  buildRegions(); renderHome(); renderFeaturedCarousel(); renderPresets();
   $('favCount').textContent = favs.length;
   if ($('mobileFavBadge')) $('mobileFavBadge').textContent = favs.length;
   if ($('drawerFavCount')) $('drawerFavCount').textContent = favs.length;
@@ -1796,6 +2015,7 @@ $('grid').addEventListener('keydown', e => {
   if ((e.key === 'Enter' || e.key === ' ') && e.target.classList.contains('cell')) { e.preventDefault(); e.target.click(); }
 });
 function toggleFav(id) {
+  haptic(10);
   favs = favs.includes(id) ? favs.filter(f => f !== id) : [...favs, id];
   store.set('waveloom_favs_v2', favs);
   favBtnState(); render();
@@ -1816,6 +2036,7 @@ function setEq(levels) { eqCols.forEach((segs, c) => segs.forEach((s, i) => s.cl
 
 function eqStart() {
   $('lcd').classList.add('on');
+  $('amArtwork')?.classList.add('playing');
   cancelAnimationFrame(eqRaf);
   if (reduceMotion) { setEq([3,4,6,5,6,4,3,2]); return; }
   if (analyser && !fftData) fftData = new Uint8Array(analyser.frequencyBinCount);
@@ -1843,6 +2064,7 @@ function eqStart() {
 }
 function eqStop() {
   $('lcd').classList.remove('on');
+  $('amArtwork')?.classList.remove('playing');
   cancelAnimationFrame(eqRaf);
   setEq(Array(COLS).fill(1));
 }
@@ -1850,9 +2072,11 @@ function eqStop() {
 /* ---------- Playback (with Auto-CORS Fallback) ---------- */
 function destroyHls() { if (hls) { hls.destroy(); hls = null; } }
 function playStation(st, allowNoCorsRetry = true) {
+  haptic(12);
   if (recorder && recorder.state === 'recording') recorder.stop();
   if (cur && cur.id === st.id && loaded && !failed.has(st.id)) { togglePlay(); return; }
   cur = st; loaded = true; stallTicks = 0; lastAudioTime = 0; track(st);
+  updateAppleMusicArtwork(st);
   $('lcdMode').textContent = st.type === 'Akashvani' ? 'AIR' : 'ON AIR';
   $('pCat').textContent = `Malayalam · ${st.type}`;
   $('pTitle').textContent = st.name;
@@ -1914,6 +2138,7 @@ function streamError(st) {
   toast(`${st.name} is offline right now`); render();
 }
 function togglePlay() {
+  haptic(12);
   if (!cur) { if (allStations.length) playStation(allStations[0]); return; }
   if (!loaded) { playStation(cur); return; }
   if (failed.has(cur.id)) { const s = cur; cur = null; playStation(s); return; }
@@ -1942,6 +2167,7 @@ function favBtnState() {
   $('favBtn').querySelector('svg').setAttribute('fill', on ? 'currentColor' : 'none');
 }
 function step(dir) {
+  haptic(10);
   const list = filtered(); if (!list.length) return;
   const i = cur ? list.findIndex(s => s.id === cur.id) : -1;
   const n = i < 0 ? (dir > 0 ? 0 : list.length - 1) : (i + dir + list.length) % list.length;
@@ -1951,6 +2177,7 @@ function closePlayer() {
   if (recorder && recorder.state === 'recording') recorder.stop();
   destroyHls(); audio.pause(); audio.removeAttribute('src'); audio.load();
   playing = false; cur = null; loaded = false; updatePlayIcon(); eqStop();
+  updateAppleMusicArtwork(null);
   $('lcdMode').textContent = 'READY';
   $('pTitle').textContent = 'Select a station';
   $('driveTitle').textContent = 'Select a station';
@@ -2018,7 +2245,7 @@ $('drivePlayBtn').onclick = togglePlay;
 $('drivePrevBtn').onclick = () => step(-1);
 $('driveNextBtn').onclick = () => step(1);
 
-/* ---------- Spotify / Apple Music Now-Playing Sheet Toggle ---------- */
+/* ---------- Apple Music Now-Playing Sheet (Tap + Swipe-Down Gesture) ---------- */
 const consolePane = $('consolePane');
 const npCollapseBtn = $('npCollapseBtn');
 
@@ -2027,13 +2254,30 @@ if (consolePane) {
     if (window.innerWidth > 1120) return;
     if (consolePane.classList.contains('expanded')) return;
     if (e.target.closest('#playBtn')) return;
+    haptic(10);
     consolePane.classList.add('expanded');
   });
+
+  // Swipe-down gesture to dismiss expanded Now Playing sheet
+  let touchStartY = 0;
+  consolePane.addEventListener('touchstart', e => {
+    if (!consolePane.classList.contains('expanded')) return;
+    touchStartY = e.touches[0].clientY;
+  }, { passive: true });
+  consolePane.addEventListener('touchend', e => {
+    if (!consolePane.classList.contains('expanded')) return;
+    const deltaY = e.changedTouches[0].clientY - touchStartY;
+    if (deltaY > 90 && consolePane.scrollTop <= 5) {
+      haptic(10);
+      consolePane.classList.remove('expanded');
+    }
+  }, { passive: true });
 }
 
 if (npCollapseBtn) {
   npCollapseBtn.addEventListener('click', e => {
     e.stopPropagation();
+    haptic(10);
     consolePane.classList.remove('expanded');
   });
 }
@@ -2045,6 +2289,7 @@ const settingsSection = $('settings');
 const drawerMount = $('drawerSettingsMount');
 
 function openSettingsDrawer() {
+  haptic(10);
   if (settingsSection && drawerMount && settingsSection.parentElement !== drawerMount) {
     drawerMount.appendChild(settingsSection);
   }
@@ -2068,7 +2313,7 @@ function switchLibraryView(targetView) {
   view = targetView;
   const isFav = view === 'favourites';
   $('directory').style.display = 'block';
-  $('viewHeading').innerHTML = isFav ? 'Favourites <span>പ്രിയപ്പെട്ടവ</span>' : 'Malayalam <span>മലയാളം</span>';
+  $('viewHeading').innerHTML = isFav ? 'Favourites <span>പ്രിയപ്പെട്ടവ</span>' : 'Listen Now <span>മലയാളം</span>';
   $('viewSub').textContent = isFav ? 'Your saved Malayalam radio stations.' : 'Akashvani, FM and online Malayalam stations. Tap a station to play.';
   $('toolbar').style.display = isFav ? 'none' : 'flex';
   $('presetsWrap').style.display = isFav ? 'none' : 'block';
@@ -2116,6 +2361,7 @@ vol.oninput = () => { audio.volume = +vol.value; store.set('waveloom_volume', +v
 const SLEEP = [0, 15, 30, 60];
 let sleepIdx = 0, sleepEnd = 0, sleepTick = null;
 $('sleepBtn').onclick = () => {
+  haptic(10);
   sleepIdx = (sleepIdx + 1) % SLEEP.length;
   clearInterval(sleepTick);
   const btn = $('sleepBtn'), txt = $('sleepTxt');
@@ -2142,7 +2388,7 @@ document.querySelectorAll('.nav-tab').forEach(tab => tab.addEventListener('click
   $('directory').style.display = isSet ? 'none' : 'block';
   $('settings').classList.toggle('visible', isSet);
   if (isSet) { extras(); return; }
-  $('viewHeading').innerHTML = isFav ? 'Favourites <span>പ്രിയപ്പെട്ടവ</span>' : 'Malayalam <span>മലയാളം</span>';
+  $('viewHeading').innerHTML = isFav ? 'Favourites <span>പ്രിയപ്പെട്ടവ</span>' : 'Listen Now <span>മലയാളം</span>';
   $('viewSub').textContent = isFav ? 'Your saved Malayalam radio stations.' : 'Akashvani, FM and online Malayalam stations. Tap a station to play.';
   $('toolbar').style.display = isFav ? 'none' : 'flex';
   $('presetsWrap').style.display = isFav ? 'none' : 'block';
@@ -2193,6 +2439,7 @@ function track(st) {
   store.set('waveloom_recent', recents); store.set('waveloom_last', st.id);
 }
 function showUI(st) {
+  updateAppleMusicArtwork(st);
   $('lcdMode').textContent = st.type === 'Akashvani' ? 'AIR' : 'ON AIR';
   $('pCat').textContent = `Malayalam · ${st.type}`; $('pTitle').textContent = st.name;
   $('driveCat').textContent = `MALAYALAM · ${st.type.toUpperCase()}`; $('driveTitle').textContent = st.name;
@@ -2497,6 +2744,7 @@ setInterval(() => {
 }, 1000);
 
 rew15Btn.onclick = () => {
+  haptic(12);
   if (!cur || !audio.seekable || audio.seekable.length === 0) {
     toast('Rewind buffer not available for this stream');
     return;
@@ -2512,6 +2760,7 @@ rew15Btn.onclick = () => {
 };
 
 goLiveBtn.onclick = () => {
+  haptic(12);
   if (audio.seekable && audio.seekable.length > 0) {
     audio.currentTime = audio.seekable.end(audio.seekable.length - 1);
     goLiveBtn.style.display = 'none';
@@ -2535,6 +2784,7 @@ function updateAdGuardUI() {
 }
 if ($('adSkipBtn')) {
   $('adSkipBtn').onclick = () => {
+    haptic(10);
     adGuardEnabled = !adGuardEnabled;
     store.set('waveloom_adguard', adGuardEnabled);
     silenceSeconds = 0;
@@ -2628,7 +2878,7 @@ async function pollIcyMetadata(st) {
 }
 
 /* ---------- GitHub Releases Auto-Update Checker ---------- */
-const CURRENT_APP_VERSION = 'v1.0.2';
+const CURRENT_APP_VERSION = 'v1.1.0';
 const GITHUB_REPO = 'midhunmalayil1998-debug/waveloom';
 
 if ($('appVerLabel')) $('appVerLabel').textContent = CURRENT_APP_VERSION;
