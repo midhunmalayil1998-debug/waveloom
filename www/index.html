@@ -548,6 +548,75 @@ select.pill-btn { max-width: 165px; }
   background: #fff;
 }
 
+/* Classic Analog Radio Dial (Retro Mode Toggle) */
+.retro-dial-box {
+  background: linear-gradient(180deg, #1E1915, #120F0C);
+  border: 2px solid #57483A;
+  border-radius: 16px;
+  padding: 12px 14px;
+  margin-bottom: 14px;
+  box-shadow: inset 0 4px 16px rgba(0,0,0,.75);
+}
+.retro-dial-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .72rem;
+  color: #FBBF24;
+  margin-bottom: 8px;
+}
+.retro-scale-wrap {
+  position: relative;
+  height: 52px;
+  background: linear-gradient(180deg, #29221A, #1C1712);
+  border: 1px solid rgba(251, 191, 36, .3);
+  border-radius: 10px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 6px 10px;
+}
+.retro-ticks {
+  display: flex;
+  justify-content: space-between;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: .64rem;
+  color: rgba(253, 230, 138, .85);
+  letter-spacing: .02em;
+}
+.retro-ticks span { position: relative; padding-bottom: 12px; }
+.retro-ticks span::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 1.5px;
+  height: 8px;
+  background: rgba(253, 230, 138, .65);
+}
+.retro-needle {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 3px;
+  background: #EF4444;
+  box-shadow: 0 0 10px #EF4444;
+  pointer-events: none;
+  transition: left .08s linear;
+}
+.retro-slider {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: ew-resize;
+  margin: 0;
+}
+
 .tuner-screen {
   background: rgba(0,0,0,.32);
   backdrop-filter: blur(12px);
@@ -951,6 +1020,7 @@ select.pill-btn { max-width: 165px; }
   }
   .console-pane:not(.expanded) .console-hint,
   .console-pane:not(.expanded) .tuner-screen,
+  .console-pane:not(.expanded) .retro-dial-box,
   .console-pane:not(.expanded) .vol-box,
   .console-pane:not(.expanded) .eq-presets,
   .console-pane:not(.expanded) #timeshiftBox,
@@ -969,7 +1039,7 @@ select.pill-btn { max-width: 165px; }
     box-shadow: none !important;
     background: transparent !important;
   }
-  .console-pane:not(.expanded) .am-artwork-wrap { margin: 0 !important; flex-shrink: 0 !important; }
+  .console-pane:not(.expanded) .am-artwork-wrap { display: flex !important; margin: 0 !important; flex-shrink: 0 !important; }
   .console-pane:not(.expanded) .am-artwork {
     width: 44px !important;
     height: 44px !important;
@@ -1232,7 +1302,7 @@ select.pill-btn { max-width: 165px; }
       </div>
 
       <div class="settings-card">
-        <div class="section-label">Alarm</div>
+        <div class="section-label">Gentle Fade-In Radio Alarm (30s Ramp)</div>
         <div class="row" style="margin-bottom:18px">
           <input type="time" id="alarmTime" class="pill-btn" aria-label="Alarm time">
           <button class="pill-btn" id="alarmBtn">Set alarm</button>
@@ -1256,7 +1326,7 @@ select.pill-btn { max-width: 165px; }
       <div class="settings-card">
         <div class="section-label">App Updates & Version</div>
         <div class="row" style="justify-content:space-between;margin-bottom:8px">
-          <span style="font-size:.86rem;font-weight:600">Version: <strong id="appVerLabel" style="color:var(--accent)">v1.1.0</strong></span>
+          <span style="font-size:.86rem;font-weight:600">Version: <strong id="appVerLabel" style="color:var(--accent)">v1.2.0</strong></span>
           <button class="pill-btn primary" id="checkUpdateBtn">🔄 Check Updates</button>
         </div>
         <p id="updateStatusNote" class="caption" style="margin:0">Checks GitHub Releases for newer APK versions.</p>
@@ -1286,11 +1356,31 @@ select.pill-btn { max-width: 165px; }
       <!-- Dynamic Blurred Mesh Background -->
       <div class="am-mesh-bg" id="amMeshBg"></div>
 
-      <!-- Apple Music Centered Artwork Card (Scales smoothly on Play/Pause) -->
-      <div class="am-artwork-wrap">
+      <!-- Apple Music Centered Artwork Card (Hidden when Retro Dial Mode is toggled ON) -->
+      <div class="am-artwork-wrap" id="amArtworkWrap">
         <div class="am-artwork" id="amArtwork">
           <span id="amArtLetter">W</span>
           <img id="amArtImg" alt="" hidden>
+        </div>
+      </div>
+
+      <!-- Classic Analog Radio Dial (Retro Mode Toggle) -->
+      <div class="retro-dial-box" id="retroDialBox" hidden>
+        <div class="retro-dial-top">
+          <span>📻 FM ANALOG BAND</span>
+          <strong id="retroFreqReadout">98.3 MHz</strong>
+        </div>
+        <div class="retro-scale-wrap">
+          <div class="retro-ticks">
+            <span>88</span>
+            <span>92</span>
+            <span>96</span>
+            <span>100</span>
+            <span>104</span>
+            <span>108</span>
+          </div>
+          <div class="retro-needle" id="retroNeedle"></div>
+          <input type="range" class="retro-slider" id="retroSlider" min="880" max="1080" value="983" step="1" aria-label="Analog FM Tuner Dial">
         </div>
       </div>
 
@@ -1350,6 +1440,10 @@ select.pill-btn { max-width: 165px; }
       </label>
 
       <div class="console-actions">
+        <button class="dock" id="retroDialBtn" aria-label="Toggle Analog Radio Dial">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+          <span>Retro Dial</span>
+        </button>
         <button class="dock" id="recBtn" aria-label="Record live audio">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="7"/></svg>
           <span id="recTxt">Rec</span>
@@ -1366,13 +1460,13 @@ select.pill-btn { max-width: 165px; }
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
           <span id="sleepTxt">Sleep</span>
         </button>
-        <button class="dock" id="shareBtn" aria-label="Share station">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/></svg>
-          <span>Share</span>
-        </button>
         <button class="dock" id="adSkipBtn" aria-label="Auto-Skip Ads or Silence">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 4 15 12 5 20 5 4"/><line x1="19" y1="5" x2="19" y2="19"/></svg>
           <span id="adSkipTxt">Ad Guard</span>
+        </button>
+        <button class="dock" id="shareBtn" aria-label="Share station">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/></svg>
+          <span>Share</span>
         </button>
         <button class="dock" id="hideBtn" aria-label="Hide this station">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.9 17.9A10.9 10.9 0 0 1 12 20C5 20 1 12 1 12a18.5 18.5 0 0 1 5.1-5.9M9.9 4.2A9.1 9.1 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.2 3.2M1 1l22 22"/></svg>
@@ -1519,10 +1613,75 @@ let themeId = store.get('waveloom_studio_theme', 'thanal');
 let dark = store.get('waveloom_dark_mode', window.matchMedia('(prefers-color-scheme: dark)').matches);
 const failed = new Set();
 let hidden = store.get('waveloom_hidden', []), recents = store.get('waveloom_recent', []), listen = store.get('waveloom_listen', {});
-let region = '', loaded = false, wasPlaying = false, alarmTimer = null;
+let region = '', loaded = false, wasPlaying = false, alarmTimer = null, fadeInterval = null;
 let cur = null, playing = false, hls = null, corsMode = true;
 const audio = $('audio');
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* ---------- Classic Analog Radio Dial (Retro Mode Toggle) ---------- */
+let retroDialMode = store.get('waveloom_retro_dial', false);
+let retroSnapTimer = null;
+
+function updateRetroDialUI() {
+  const btn = $('retroDialBtn');
+  const dialBox = $('retroDialBox');
+  const artWrap = $('amArtworkWrap');
+  if (btn) btn.classList.toggle('active', retroDialMode);
+  if (dialBox) dialBox.hidden = !retroDialMode;
+  if (artWrap) artWrap.hidden = retroDialMode;
+}
+
+if ($('retroDialBtn')) {
+  $('retroDialBtn').onclick = () => {
+    haptic(12);
+    retroDialMode = !retroDialMode;
+    store.set('waveloom_retro_dial', retroDialMode);
+    updateRetroDialUI();
+    toast(`Retro Analog Dial: ${retroDialMode ? 'ON' : 'OFF'}`);
+  };
+  updateRetroDialUI();
+}
+
+function syncRetroNeedleToStation(st) {
+  if (!st || !$('retroSlider')) return;
+  const freqMatch = (st.name + ' ' + st.detail).match(/\b(8[89]\.\d|9\d\.\d|10[0-8]\.\d)\b/);
+  const list = allStations.filter(s => !hidden.includes(s.id));
+  const idx = Math.max(0, list.findIndex(s => s.id === st.id));
+  const val = freqMatch ? Math.round(parseFloat(freqMatch[1]) * 10) : Math.round(880 + (idx / Math.max(1, list.length - 1)) * 200);
+  $('retroSlider').value = val;
+  $('retroFreqReadout').textContent = `${(val / 10).toFixed(1)} MHz`;
+  const pct = ((val - 880) / 200) * 100;
+  $('retroNeedle').style.left = `${pct}%`;
+}
+
+if ($('retroSlider')) {
+  $('retroSlider').addEventListener('input', e => {
+    const val = +e.target.value;
+    const freqStr = (val / 10).toFixed(1);
+    $('retroFreqReadout').textContent = `${freqStr} MHz`;
+    const pct = ((val - 880) / 200) * 100;
+    $('retroNeedle').style.left = `${pct}%`;
+    haptic(5);
+
+    clearTimeout(retroSnapTimer);
+    retroSnapTimer = setTimeout(() => {
+      const list = allStations.filter(s => !hidden.includes(s.id));
+      if (!list.length) return;
+      // Check if any station explicitly matches this FM frequency
+      const exact = list.find(s => (s.name + ' ' + s.detail).includes(freqStr));
+      if (exact) {
+        playStation(exact);
+        return;
+      }
+      // Otherwise map dial position proportionally across available stations
+      const ratio = (val - 880) / 200;
+      const targetIdx = Math.min(list.length - 1, Math.max(0, Math.round(ratio * (list.length - 1))));
+      if (list[targetIdx] && (!cur || cur.id !== list[targetIdx].id)) {
+        playStation(list[targetIdx]);
+      }
+    }, 320);
+  });
+}
 
 /* ---------- Apple Music Artwork & Dynamic Blurred Mesh Updater ---------- */
 function updateAppleMusicArtwork(st) {
@@ -1536,6 +1695,7 @@ function updateAppleMusicArtwork(st) {
     meshBg.style.backgroundImage = '';
     return;
   }
+  syncRetroNeedleToStation(st);
   const initial = ([...st.name.replace(/^(AIR|FM|Radio)\s+/i, '')][0] || '♪').toUpperCase();
   artLetter.textContent = initial;
   const h = hue(st.name);
@@ -2258,7 +2418,6 @@ if (consolePane) {
     consolePane.classList.add('expanded');
   });
 
-  // Swipe-down gesture to dismiss expanded Now Playing sheet
   let touchStartY = 0;
   consolePane.addEventListener('touchstart', e => {
     if (!consolePane.classList.contains('expanded')) return;
@@ -2355,7 +2514,11 @@ if (window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.App
 
 const vol = $('vol');
 vol.value = store.get('waveloom_volume', 1); audio.volume = +vol.value;
-vol.oninput = () => { audio.volume = +vol.value; store.set('waveloom_volume', +vol.value); };
+vol.oninput = () => {
+  clearInterval(fadeInterval);
+  audio.volume = +vol.value;
+  store.set('waveloom_volume', +vol.value);
+};
 
 /* Sleep timer */
 const SLEEP = [0, 15, 30, 60];
@@ -2525,20 +2688,47 @@ $('importFile').onchange = async e => {
   } catch { toast('That file is not a Waveloom backup'); }
   e.target.value = '';
 };
+
+/* ---------- Gentle 30-Second Fade-In Radio Alarm ---------- */
+function startGentleFadeIn(targetVol) {
+  clearInterval(fadeInterval);
+  audio.volume = 0;
+  let stepCount = 0;
+  const totalSteps = 30; // 30 seconds ramp
+  fadeInterval = setInterval(() => {
+    stepCount++;
+    const nextVol = Math.min(targetVol, (stepCount / totalSteps) * targetVol);
+    audio.volume = nextVol;
+    if (vol) vol.value = nextVol.toFixed(2);
+    if (stepCount >= totalSteps) {
+      clearInterval(fadeInterval);
+      audio.volume = targetVol;
+      if (vol) vol.value = targetVol;
+    }
+  }, 1000);
+}
+
 $('alarmBtn').onclick = () => {
   const b = $('alarmBtn'), v = $('alarmTime').value, note = $('alarmNote');
   const reset = () => { delete b.dataset.on; b.textContent = tr('Set alarm'); note.textContent = ''; };
   clearTimeout(alarmTimer);
+  clearInterval(fadeInterval);
   if (b.dataset.on) { reset(); return; }
   if (!v) { toast('Pick a time first'); return; }
   const [h, m] = v.split(':').map(Number), t = new Date();
   t.setHours(h, m, 0, 0); if (t <= new Date()) t.setDate(t.getDate() + 1);
   alarmTimer = setTimeout(() => {
     const st = cur || findStation(store.get('waveloom_last', null)) || allStations[0];
-    loaded = false; playStation(st); reset();
+    const targetVol = store.get('waveloom_volume', 1);
+    loaded = false;
+    playStation(st);
+    startGentleFadeIn(targetVol);
+    toast(`⏰ Alarm: Gentle 30s fade-in started (${st.name})`);
+    reset();
   }, t - new Date());
-  b.dataset.on = 1; b.textContent = tr('Cancel alarm'); note.textContent = `Rings at ${v}. Keep app open.`;
+  b.dataset.on = 1; b.textContent = tr('Cancel alarm'); note.textContent = `Gentle fade-in at ${v}.`;
 };
+
 addEventListener('offline', () => { wasPlaying = playing; $('offline').hidden = false; });
 addEventListener('online', () => {
   $('offline').hidden = true;
@@ -2878,7 +3068,7 @@ async function pollIcyMetadata(st) {
 }
 
 /* ---------- GitHub Releases Auto-Update Checker ---------- */
-const CURRENT_APP_VERSION = 'v1.1.0';
+const CURRENT_APP_VERSION = 'v1.2.0';
 const GITHUB_REPO = 'midhunmalayil1998-debug/waveloom';
 
 if ($('appVerLabel')) $('appVerLabel').textContent = CURRENT_APP_VERSION;
